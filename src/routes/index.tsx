@@ -7,7 +7,7 @@
  */
 import React from 'react'
 import { Navigate, useRoutes } from 'react-router-dom'
-import { Web3site,Extensions } from '@/pages'
+import { Pay } from '@/pages'
 import Loading from '@/components/pageLoading'
 type CutonFallBackT =
   | boolean
@@ -27,15 +27,11 @@ const SuspenseWrapper = (Child: ChildT, cutonFallBack?: CutonFallBackT): any => 
 }
 const Routes = () => {
   const RouterList = useRoutes([
-  {
-    path: '/',
-    element: SuspenseWrapper(Web3site),
-  },
-  {
-    path: '/extensions',
-    element: SuspenseWrapper(Extensions),
-  },
-  { path: '*', element: <Navigate to="/" replace /> }
+    {
+      path: '/',
+      element: SuspenseWrapper(Pay),
+    },
+    { path: '*', element: <Navigate to="/" replace /> }
   ])
   return RouterList
 }

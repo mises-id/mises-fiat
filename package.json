@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ahooksjs/use-url-state": "^3.4.0",
+    "@alchemy-pay/ramp-sdk": "^1.0.0",
     "@babel/preset-env": "^7.18.2",
     "@craco/craco": "^7.0.0-alpha.3",
     "@testing-library/jest-dom": "^5.16.4",
@@ -36,7 +37,7 @@
     "web3": "^1.7.3"
   },
   "scripts": {
-    "start": "PORT=7777 REACT_APP_NODE_ENV=test craco start",
+    "start": "PORT=2333 REACT_APP_NODE_ENV=test craco start",
     "build": "REACT_APP_NODE_ENV=production craco build",
     "build:test": "REACT_APP_NODE_ENV=test craco build",
     "test": "craco test",

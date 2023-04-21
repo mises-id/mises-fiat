@@ -32,7 +32,7 @@ jobs:
         run: |
           aws s3 cp --recursive \
            --region us-east-1 \
-           build/ s3://web3.mises/main
+           build/ s3://pay.mises/main
       - name: Invalidate cloudfront
         run: |
           aws cloudfront create-invalidation \
