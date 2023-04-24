@@ -43,3 +43,6 @@
   font-weight: bold;
   color: #333333;
 }
+iframe{
+  border: none !important;
+}

@@ -7,23 +7,13 @@ import { Button, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const Home = () => {
-  const config: {
-    secret: string,
-    appId: string,
-    environment:  "TEST" | 'PROD'
-  } = process.env.REACT_APP_NODE_ENV === 'production' ? {
-    secret: '4Yn8RkxDXN71Q3p0', 
-    appId: 'f83Is2y7L425rxl8', 
-    environment: 'PROD'
-  } : {
-    secret: '4Yn8RkxDXN71Q3p0', 
-    appId: 'f83Is2y7L425rxl8', 
-    environment: 'TEST'
-  }
   // Definition Ramp SDK
   const initRamp = () => {
+    console.log(process.env)
     return new rampSDK({
-      ...config,
+      secret: process.env.REACT_APP_SECRET!, 
+      appId: process.env.REACT_APP_APPID!, 
+      environment: process.env.REACT_APP_NODE_ENV === 'production' ? 'PROD' : 'TEST',
       containerNode: 'rampView',
       language: 'en-US' 
     });
