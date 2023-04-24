@@ -3,7 +3,7 @@ import "./index.less";
 import { rampSDK } from '@alchemy-pay/ramp-sdk';
 import { useEffect, useState } from "react";
 import { logEvent } from "firebase/analytics";
-import { Button, Result, Toast } from "antd-mobile";
+import { Button, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const Home = () => {
@@ -32,15 +32,15 @@ const Home = () => {
   const analytics = useAnalytics()
   const [error, seterror] = useState(false)
 
-  const gotoTradeHistory = (ramp: { handleUrl: () => any; }) =>{
-    logEvent(analytics, 'successful_fiat')
-    const iframe = document.querySelector('iframe')
-      if(iframe){
-        iframe.src = `${ramp.handleUrl()}#/tradeHistory`
-      }else{
-        Toast.show('Unknown Failed')
-      }
-  }
+  // const gotoTradeHistory = (ramp: { handleUrl: () => any; }) =>{
+  //   logEvent(analytics, 'successful_fiat')
+  //   const iframe = document.querySelector('iframe')
+  //     if(iframe){
+  //       iframe.contentWindow?.location.replace(`${ramp.handleUrl()}#/tradeHistory`)
+  //     }else{
+  //       Toast.show('Unknown Failed')
+  //     }
+  // }
 
   useEffect(() => {
     logEvent(analytics, 'open_fiat_page')
@@ -50,14 +50,15 @@ const Home = () => {
 
       // The callback triggered by the return button after the order payment is successful
       ramp.on('RAMP_WIDGET_CLOSE', () => {
-        gotoTradeHistory(ramp)
+        console.log('running ramp.on')
+        // gotoTradeHistory(ramp)
       })
 
-      window.addEventListener('message', res=>{
-        if(res.origin === 'https://ramptest.alchemypay.org'){
-          gotoTradeHistory(ramp)
-        }
-      })
+      // window.addEventListener('message', res=>{
+      //   if(res.origin === 'https://ramptest.alchemypay.org'){
+      //     gotoTradeHistory(ramp)
+      //   }
+      // })
 
     } catch (error: any) {
       if (error.toString().indexOf('[Ramp SDK] =>') > -1) {
