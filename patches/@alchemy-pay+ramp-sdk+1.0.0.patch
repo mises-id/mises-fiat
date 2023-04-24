@@ -1,0 +1,20 @@
+diff --git a/node_modules/@alchemy-pay/ramp-sdk/README.md b/node_modules/@alchemy-pay/ramp-sdk/README.md
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@alchemy-pay/ramp-sdk/sdk.js b/node_modules/@alchemy-pay/ramp-sdk/sdk.js
+old mode 100644
+new mode 100755
+index 5428b34..e3c3ca3
+--- a/node_modules/@alchemy-pay/ramp-sdk/sdk.js
++++ b/node_modules/@alchemy-pay/ramp-sdk/sdk.js
+@@ -7967,8 +7967,8 @@ var _default = {
+       NAME: 'PROD'
+     },
+     TEST: {
+-      FRONTEND: 'https://ramp-test.alchemytech.cc',
+-      BACKEND: 'https://api-test.alchemytech.cc',
++      FRONTEND: 'https://ramptest.alchemypay.org',
++			BACKEND: 'https://apitest.alchemypay.org',
+       NAME: 'TEST'
+     },
+     DEV: {

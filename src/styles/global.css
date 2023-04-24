@@ -173,36 +173,12 @@
   }
 }
 
-.visible{
-  visibility:visible;
-}
-
-.\!visible{
-  visibility:visible !important;
-}
-
-.fixed{
-  position:fixed;
-}
-
-.m-25{
-  margin:25px;
-}
-
 .mt-10{
   margin-top:10px;
 }
 
-.block{
-  display:block;
-}
-
 .flex{
   display:flex;
-}
-
-.list-item{
-  display:list-item;
 }
 
 .h-screen{
@@ -215,12 +191,6 @@
 
 .justify-center{
   justify-content:center;
-}
-
-.truncate{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
 }
 
 .text-center{

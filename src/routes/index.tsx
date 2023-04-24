@@ -7,7 +7,7 @@
  */
 import React from 'react'
 import { Navigate, useRoutes } from 'react-router-dom'
-import { Pay } from '@/pages'
+import { Fiat } from '@/pages'
 import Loading from '@/components/pageLoading'
 type CutonFallBackT =
   | boolean
@@ -29,7 +29,7 @@ const Routes = () => {
   const RouterList = useRoutes([
     {
       path: '/',
-      element: SuspenseWrapper(Pay),
+      element: SuspenseWrapper(Fiat),
     },
     { path: '*', element: <Navigate to="/" replace /> }
   ])

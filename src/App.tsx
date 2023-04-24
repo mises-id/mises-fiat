@@ -6,7 +6,6 @@
  * @Description: 
  */
 import { ConfigProvider } from 'antd-mobile';
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import Routes from './routes';
 import enUS from 'antd-mobile/es/locales/en-US'
