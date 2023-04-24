@@ -9,47 +9,23 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 const Home = () => {
   // Definition Ramp SDK
   const initRamp = () => {
-    console.log(process.env)
-    return new rampSDK({
-      secret: process.env.REACT_APP_SECRET!, 
-      appId: process.env.REACT_APP_APPID!, 
-      environment: process.env.REACT_APP_NODE_ENV === 'production' ? 'PROD' : 'TEST',
-      containerNode: 'rampView',
-      language: 'en-US' 
-    });
-  }
-
-  const analytics = useAnalytics()
-  const [error, seterror] = useState(false)
-
-  // const gotoTradeHistory = (ramp: { handleUrl: () => any; }) =>{
-  //   logEvent(analytics, 'successful_fiat')
-  //   const iframe = document.querySelector('iframe')
-  //     if(iframe){
-  //       iframe.contentWindow?.location.replace(`${ramp.handleUrl()}#/tradeHistory`)
-  //     }else{
-  //       Toast.show('Unknown Failed')
-  //     }
-  // }
-
-  useEffect(() => {
-    logEvent(analytics, 'open_fiat_page')
     try {
-      const ramp = initRamp()
+      const ramp =  new rampSDK({
+        secret: process.env.REACT_APP_SECRET!, 
+        appId: process.env.REACT_APP_APPID!, 
+        environment: process.env.REACT_APP_NODE_ENV === 'production' ? 'PROD' : 'TEST',
+        containerNode: 'rampView',
+        language: 'en-US' 
+      });
       ramp.init();
-
+  
       // The callback triggered by the return button after the order payment is successful
       ramp.on('RAMP_WIDGET_CLOSE', () => {
         console.log('running ramp.on')
-        // gotoTradeHistory(ramp)
+        gotoTradeHistory(ramp)
       })
 
-      // window.addEventListener('message', res=>{
-      //   if(res.origin === 'https://ramptest.alchemypay.org'){
-      //     gotoTradeHistory(ramp)
-      //   }
-      // })
-
+      return ramp
     } catch (error: any) {
       if (error.toString().indexOf('[Ramp SDK] =>') > -1) {
         seterror(true)
@@ -58,11 +34,37 @@ const Home = () => {
         })
       }
     }
+    
+  }
+
+  const analytics = useAnalytics()
+  const [error, seterror] = useState(false)
+
+  const gotoTradeHistory = (ramp: { handleUrl: () => string, close:() => void }) =>{
+    logEvent(analytics, 'successful_fiat')
+    // 1. 弹框提示用户应该在哪里查看交易记录
+    // 2. 点击弹框的确定按钮执行下面的逻辑
+
+    // const iframe = document.querySelector('iframe')
+    // if(iframe){
+    //   Toast.show('Unknown Failed')
+    //   iframe.src = ramp.handleUrl()
+    // }else{
+    //   Toast.show('Unknown Failed')
+    // }
+    // reload init
+    ramp.close()
+    initRamp()
+  }
+
+  useEffect(() => {
+    logEvent(analytics, 'open_fiat_page')
+    initRamp()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
-    <div className="container">
+    <>
       {/* <div className="top-bar">
         <div className="header">
           <NavBar backArrow={false}>Pay</NavBar>
@@ -79,7 +81,7 @@ const Home = () => {
         </div>
       </div>}
       {!error && <div id="rampView"></div>}
-    </div>
+    </>
   );
 };
 export default Home;
