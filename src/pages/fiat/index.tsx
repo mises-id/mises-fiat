@@ -3,7 +3,7 @@ import "./index.less";
 import { rampSDK } from '@alchemy-pay/ramp-sdk';
 import { useEffect, useState } from "react";
 import { logEvent } from "firebase/analytics";
-import { Button, FloatingBubble, Image, Result } from "antd-mobile";
+import { Button, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import Screen from "@/components/screen";
 const Home = () => {
@@ -50,7 +50,7 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const gotoTelegram = ()=> window.open('https://t.me/+2KK5JivrORwzODg1', 'target=_blank')
+  // const gotoTelegram = ()=> window.open('https://t.me/+2KK5JivrORwzODg1', 'target=_blank')
   return (
     <>
       {/* <div className="top-bar">
@@ -70,7 +70,7 @@ const Home = () => {
       </div>}
       {!error && <div id="rampView"></div>}
       <Screen />
-      <FloatingBubble
+      {/* <FloatingBubble
         style={{
           '--initial-position-bottom': '20vh',
           '--initial-position-right': '5px',
@@ -81,7 +81,7 @@ const Home = () => {
         onClick={gotoTelegram}
       >
         <Image src="/images/question.jpg" width={48} height={48} lazy={false} />
-      </FloatingBubble>
+      </FloatingBubble> */}
     </>
   );
 };
