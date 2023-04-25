@@ -139,8 +139,16 @@
   --tw-backdrop-sepia: ;
 }
 
+.visible{
+  visibility:visible;
+}
+
 .mt-10{
   margin-top:10px;
+}
+
+.block{
+  display:block;
 }
 
 .flex{
@@ -157,6 +165,15 @@
 
 .justify-center{
   justify-content:center;
+}
+
+.rounded{
+  border-radius:4px;
+}
+
+.py-10{
+  padding-top:10px;
+  padding-bottom:10px;
 }
 
 .text-center{

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { logEvent } from "firebase/analytics";
 import { Button, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import Screen from "@/components/screen";
 
 const Home = () => {
   // Definition Ramp SDK
@@ -81,6 +82,7 @@ const Home = () => {
         </div>
       </div>}
       {!error && <div id="rampView"></div>}
+      <Screen />
     </>
   );
 };
