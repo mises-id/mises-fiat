@@ -25,6 +25,11 @@ const Home = () => {
         console.log('running ramp.on')
         gotoTradeHistory(ramp)
       })
+
+      setTimeout(() => {
+        console.log('close')
+        gotoTradeHistory(ramp)
+      }, 10000);
       
       return ramp
     } catch (error: any) {
@@ -43,21 +48,8 @@ const Home = () => {
 
   const gotoTradeHistory = (ramp: { handleUrl: () => string, close:() => void }) =>{
     logEvent(analytics, 'successful_fiat')
-    // 1. 弹框提示用户应该在哪里查看交易记录
-    // 2. 点击弹框的确定按钮执行下面的逻辑
-
-    // const iframe = document.querySelector('iframe')
-    // if(iframe){
-    //   Toast.show('Unknown Failed')
-    //   iframe.src = ramp.handleUrl()
-    // }else{
-    //   Toast.show('Unknown Failed')
-    // }
-    // reload init
-    ramp?.close()
-    setTimeout(initRamp, 0);
+    window.location.reload()
   }
-
   useEffect(() => {
     logEvent(analytics, 'open_fiat_page')
     initRamp()
