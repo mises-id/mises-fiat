@@ -3,10 +3,10 @@ import "./index.less";
 import { rampSDK } from '@alchemy-pay/ramp-sdk';
 import { useEffect, useState } from "react";
 import { logEvent } from "firebase/analytics";
-import { Button, Result } from "antd-mobile";
+import { Button, FloatingBubble, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import Screen from "@/components/screen";
-
+import { MessageFill } from 'antd-mobile-icons'
 const Home = () => {
   // Definition Ramp SDK
   const initRamp = () => {
@@ -51,6 +51,9 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const gotoTelegram = ()=>{
+    window.open('https://t.me/+2KK5JivrORwzODg1', 'target=_blank')
+  }
   return (
     <>
       {/* <div className="top-bar">
@@ -70,6 +73,16 @@ const Home = () => {
       </div>}
       {!error && <div id="rampView"></div>}
       <Screen />
+      <FloatingBubble
+        style={{
+          '--initial-position-bottom': '16px',
+          '--initial-position-right': '10px',
+          '--edge-distance': '24px',
+        }}
+        onClick={gotoTelegram}
+      >
+        <MessageFill fontSize={28} />
+      </FloatingBubble>
     </>
   );
 };
