@@ -51,9 +51,7 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const gotoTelegram = ()=>{
-    window.open('https://t.me/+2KK5JivrORwzODg1', 'target=_blank')
-  }
+  const gotoTelegram = ()=> window.open('https://t.me/+2KK5JivrORwzODg1', 'target=_blank')
   return (
     <>
       {/* <div className="top-bar">
