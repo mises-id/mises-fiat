@@ -6,7 +6,6 @@ import { logEvent } from "firebase/analytics";
 import { Button, FloatingBubble, Image, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import Screen from "@/components/screen";
-import { MessageFill } from 'antd-mobile-icons'
 const Home = () => {
   // Definition Ramp SDK
   const initRamp = () => {
