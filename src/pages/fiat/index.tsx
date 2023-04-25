@@ -11,7 +11,7 @@ const Home = () => {
   // Definition Ramp SDK
   const initRamp = () => {
     try {
-      const ramp =  new rampSDK({
+      const ramp = new rampSDK({
         secret: process.env.REACT_APP_SECRET!, 
         appId: process.env.REACT_APP_APPID!, 
         environment: process.env.REACT_APP_NODE_ENV === 'production' ? 'PROD' : 'TEST',
@@ -25,7 +25,7 @@ const Home = () => {
         console.log('running ramp.on')
         gotoTradeHistory(ramp)
       })
-
+      
       return ramp
     } catch (error: any) {
       if (error.toString().indexOf('[Ramp SDK] =>') > -1) {
@@ -54,8 +54,8 @@ const Home = () => {
     //   Toast.show('Unknown Failed')
     // }
     // reload init
-    ramp.close()
-    initRamp()
+    ramp?.close()
+    setTimeout(initRamp, 0);
   }
 
   useEffect(() => {
