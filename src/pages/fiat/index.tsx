@@ -25,11 +25,6 @@ const Home = () => {
         console.log('running ramp.on')
         gotoTradeHistory(ramp)
       })
-
-      setTimeout(() => {
-        console.log('close')
-        gotoTradeHistory(ramp)
-      }, 10000);
       
       return ramp
     } catch (error: any) {
