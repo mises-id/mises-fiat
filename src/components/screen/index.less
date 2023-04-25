@@ -1,14 +1,35 @@
+@media (prefers-color-scheme: dark) {
+  .adm-page-indicator{
+    --adm-color-primary: #0059da;
+  }
+
+  :root{
+    --close-btn-color: white;
+    --desc-color:white;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root{
+    --close-btn-color: #111;
+    --desc-color: #333;
+  }
+  .adm-page-indicator{
+    --adm-color-primary: #000000;
+    
+  }
+}
+
 .screen-container{
   --min-width: 90vw;
   .adm-page-indicator{
     --dot-size: 9px;
     --dot-border-radius: 9px;
     --dot-spacing: 12px;
-    --adm-color-primary: #000000;
     --active-dot-size: 9px;
   }
   .adm-center-popup-close{
-    color: #000000;
+    color: var(--close-btn-color);
     font-weight: bold;
   }
   .adm-image-tip{
@@ -17,7 +38,7 @@
 }
 .screen-title{
   font-size: 22px;
-  color: #111;
+  color: var(--close-btn-color);
   padding: 20px 0;
   text-align: center;
   font-weight: bold;
@@ -32,7 +53,7 @@
   text-align: center;
   font-size: 16px;
   line-height: 23px;
-  color: #333;
+  color: var(--desc-color);
   white-space: pre-wrap;
 }
 .image-box{

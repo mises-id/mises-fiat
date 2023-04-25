@@ -3,7 +3,7 @@ import "./index.less";
 import { rampSDK } from '@alchemy-pay/ramp-sdk';
 import { useEffect, useState } from "react";
 import { logEvent } from "firebase/analytics";
-import { Button, FloatingBubble, Result } from "antd-mobile";
+import { Button, FloatingBubble, Image, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import Screen from "@/components/screen";
 import { MessageFill } from 'antd-mobile-icons'
@@ -73,13 +73,15 @@ const Home = () => {
       <Screen />
       <FloatingBubble
         style={{
-          '--initial-position-bottom': '16px',
-          '--initial-position-right': '10px',
-          '--edge-distance': '24px',
+          '--initial-position-bottom': '20vh',
+          '--initial-position-right': '5px',
+          '--edge-distance': '5px',
+          "--size": '48px',
+          '--background': 'none'
         }}
         onClick={gotoTelegram}
       >
-        <MessageFill fontSize={28} />
+        <Image src="/images/question.jpg" width={48} height={48} lazy={false} />
       </FloatingBubble>
     </>
   );
