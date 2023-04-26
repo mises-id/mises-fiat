@@ -18,19 +18,14 @@ const Screen:FC<Iprops> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const screenList = [{
-    description: `Buy and sell cryptocurrencies easily and 
-    quickly`,
+    description: `Buy and sell cryptocurrencies easily and quickly`,
     url: '1@2x.png'
   }, {
-    description: `Support mainstream payment methods 
-    including credit cards, debit cards.
-      E-wallets, etc.`,
+    description: `Support mainstream payment methods including credit cards, debit cards. E-wallets, etc.`,
     url: '2@2x.png'
   }, {
     description: `Viewable transaction history and 
-    progress in "Menu-Transactions" (a 
-      complete transaction may take several 
-      minutes)`,
+    progress in "Menu-Transactions" (a complete transaction may take several minutes)`,
     url: '3@2x.png'
   },]
   const items = screenList.map((item, index) => (
@@ -65,7 +60,7 @@ const Screen:FC<Iprops> = (props) => {
         <Button type="button" color='primary' shape='rounded' block className='apply-btn' onClick={()=>{
           setopen(false)
           props.close?.()
-        }}>Apply Now</Button>
+        }}>Start Now</Button>
       </div>
     </CenterPopup>
   )
