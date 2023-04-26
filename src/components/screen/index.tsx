@@ -1,15 +1,21 @@
 import { Button, CenterPopup, Image, Swiper } from 'antd-mobile'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import './index.less'
+interface Iprops {
+  close?: ()=> void
+}
 
-const Screen = () => {
+const Screen:FC<Iprops> = (props) => {
   const [open, setopen] = useState(false)
   useEffect(() => {
     const isFirstLoad = localStorage.getItem('isFirstLoad')
     if (!isFirstLoad) {
       setopen(true)
       localStorage.setItem('isFirstLoad', 'true')
+    }else{
+      props.close?.()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const screenList = [{
     description: `Buy and sell cryptocurrencies easily and 
@@ -46,14 +52,20 @@ const Screen = () => {
       closeOnMaskClick
       destroyOnClose
       showCloseButton
-      onClose={()=>setopen(false)}
+      onClose={()=>{
+        setopen(false)
+        props.close?.()
+      }}
       className="screen-container">
       <p className='screen-title'>Crypto Ramp</p>
       <div className='screen-content'>
         <Swiper>
           {items}
         </Swiper>
-        <Button type="button" color='primary' shape='rounded' block className='apply-btn' onClick={()=>setopen(false)}>Apply Now</Button>
+        <Button type="button" color='primary' shape='rounded' block className='apply-btn' onClick={()=>{
+          setopen(false)
+          props.close?.()
+        }}>Apply Now</Button>
       </div>
     </CenterPopup>
   )

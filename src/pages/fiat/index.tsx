@@ -1,54 +1,59 @@
 
 import "./index.less";
-import { rampSDK } from '@alchemy-pay/ramp-sdk';
-import { useEffect, useState } from "react";
+// import { rampSDK } from '@alchemy-pay/ramp-sdk';
+import { useEffect } from "react";
 import { logEvent } from "firebase/analytics";
-import { Button, Result } from "antd-mobile";
+// import { Button, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import Screen from "@/components/screen";
 const Home = () => {
   // Definition Ramp SDK
-  const initRamp = () => {
-    try {
-      const ramp = new rampSDK({
-        secret: process.env.REACT_APP_SECRET!, 
-        appId: process.env.REACT_APP_APPID!, 
-        environment: process.env.REACT_APP_NODE_ENV === 'production' ? 'PROD' : 'TEST',
-        containerNode: 'rampView',
-        language: 'en-US' 
-      });
-      ramp.init();
+  // const initRamp = () => {
+  //   try {
+  //     const ramp = new rampSDK({
+  //       secret: process.env.REACT_APP_SECRET!, 
+  //       appId: process.env.REACT_APP_APPID!, 
+  //       environment: process.env.REACT_APP_NODE_ENV === 'production' ? 'PROD' : 'TEST',
+  //       containerNode: 'rampView',
+  //       language: 'en-US' 
+  //     });
+  //     ramp.init();
   
-      // The callback triggered by the return button after the order payment is successful
-      ramp.on('RAMP_WIDGET_CLOSE', () => {
-        console.log('running ramp.on')
-        gotoTradeHistory(ramp)
-      })
+  //     // The callback triggered by the return button after the order payment is successful
+  //     ramp.on('RAMP_WIDGET_CLOSE', () => {
+  //       console.log('running ramp.on')
+  //       gotoTradeHistory(ramp)
+  //     })
       
-      return ramp
-    } catch (error: any) {
-      if (error.toString().indexOf('[Ramp SDK] =>') > -1) {
-        seterror(true)
-        logEvent(analytics, 'load_fiat_error',{
-          error_message: error?.message || "load_fiat_error" 
-        })
-      }
-    }
+  //     return ramp
+  //   } catch (error: any) {
+  //     if (error.toString().indexOf('[Ramp SDK] =>') > -1) {
+  //       seterror(true)
+  //       logEvent(analytics, 'load_fiat_error',{
+  //         error_message: error?.message || "load_fiat_error" 
+  //       })
+  //     }
+  //   }
     
-  }
+  // }
 
   const analytics = useAnalytics()
-  const [error, seterror] = useState(false)
+  // const [error, seterror] = useState(false)
 
-  const gotoTradeHistory = (ramp: { handleUrl: () => string, close:() => void }) =>{
-    logEvent(analytics, 'successful_fiat')
-    window.location.reload()
-  }
+  // const gotoTradeHistory = (ramp: { handleUrl: () => string, close:() => void }) =>{
+  //   logEvent(analytics, 'successful_fiat')
+  //   window.location.reload()
+  // }
   useEffect(() => {
     logEvent(analytics, 'open_fiat_page')
-    initRamp()
+    // initRamp()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const close = ()=>{
+    const url = process.env.REACT_APP_NODE_ENV === 'production' ? 'https://ramp.alchemypay.org/' : 'https://ramptest.alchemypay.org/';
+    window.location.href = `${url}?appId=${process.env.REACT_APP_APPID!}`
+  }
 
   // const gotoTelegram = ()=> window.open('https://t.me/+2KK5JivrORwzODg1', 'target=_blank')
   return (
@@ -58,7 +63,7 @@ const Home = () => {
           <NavBar backArrow={false}>Pay</NavBar>
         </div>
       </div> */}
-      {error && <div>
+      {/* {error && <div>
         <Result
           status="error"
           title="Error"
@@ -68,8 +73,8 @@ const Home = () => {
           <Button color='primary' fill='none'>Refresh Page</Button>
         </div>
       </div>}
-      {!error && <div id="rampView"></div>}
-      <Screen />
+      {!error && <div id="rampView"></div>} */}
+      <Screen close={close}/>
       {/* <FloatingBubble
         style={{
           '--initial-position-bottom': '20vh',

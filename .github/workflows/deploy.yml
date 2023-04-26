@@ -19,7 +19,7 @@ jobs:
       - name: Install and Test
         run: |
           yarn
-          yarn build
+          REACT_APP_APPID=${{ secrets.FIAT_APPID }} REACT_APP_SECRET=${{ secrets.FIAT_SECRET }} yarn build
         env:
           CI: true
       - name: Configure AWS Credentials
