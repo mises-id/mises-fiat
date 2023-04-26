@@ -44,7 +44,7 @@
   "scripts": {
     "start": "PORT=2333 REACT_APP_NODE_ENV=test craco start",
     "build": "REACT_APP_NODE_ENV=production craco build",
-    "build:test": "REACT_APP_APPID=f83Is2y7L425rxl8 REACT_APP_SECRET=4Yn8RkxDXN71Q3p0 REACT_APP_NODE_ENV=test craco build",
+    "build:test": "REACT_APP_NODE_ENV=test craco build",
     "test": "craco test",
     "eject": "craco eject",
     "css": "npx tailwindcss -i ./src/styles/tailwindcss.css -o ./src/styles/global.css --watch"
