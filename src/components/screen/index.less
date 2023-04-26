@@ -21,7 +21,6 @@
 }
 
 .screen-container{
-  --min-width: 90vw;
   .adm-page-indicator{
     --dot-size: 9px;
     --dot-border-radius: 9px;
@@ -60,8 +59,18 @@
   height: 250px;
   padding-bottom: 20px;
 }
+@media screen and (max-width:400px){
+  .screen-container{
+    --min-width: 90vw;
+  }
+}
+@media screen and (min-width:401px){
+  .screen-container{
+    --min-width: 300px;
+    --max-width: 350px;
+  }
+}
 @media screen and (max-width:321px){
-  
   .image-box{
     height: 210px;
   }
