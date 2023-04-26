@@ -17,5 +17,8 @@
         "style": "css"
       }
     ]
+  ],
+  "plugins": [
+    ["react-refresh/babel", { "skipEnvCheck": true }]
   ]
 }

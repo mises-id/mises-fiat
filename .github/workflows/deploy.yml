@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-    name: web3-mises node ${{ matrix.node-version }}
+    name: fiat-mises node ${{ matrix.node-version }}
     steps:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
@@ -37,5 +37,5 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
            --region us-east-1 \
-           --distribution-id EPHVVUAGOZPUU \
+           --distribution-id E3NZMUFAM8CPE2 \
            --paths "/index.html"

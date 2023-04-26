@@ -7,9 +7,9 @@
  */
 import React from 'react'
 import { Navigate, useRoutes } from 'react-router-dom'
-import { Pay } from '@/pages'
+import { Fiat } from '@/pages'
 import Loading from '@/components/pageLoading'
-type CutonFallBackT =
+type CutomFallBackT =
   | boolean
   | React.ReactChild
   | React.ReactFragment
@@ -18,9 +18,9 @@ type CutonFallBackT =
 type ChildT = React.LazyExoticComponent<() => JSX.Element> | React.FC
 
 // 加载异步组件的loading
-const SuspenseWrapper = (Child: ChildT, cutonFallBack?: CutonFallBackT): any => {
+const SuspenseWrapper = (Child: ChildT, cutomFallBack?: CutomFallBackT): any => {
   return (
-    <React.Suspense fallback={cutonFallBack || <Loading />}>
+    <React.Suspense fallback={cutomFallBack || <Loading />}>
       <Child />
     </React.Suspense>
   )
@@ -29,7 +29,7 @@ const Routes = () => {
   const RouterList = useRoutes([
     {
       path: '/',
-      element: SuspenseWrapper(Pay),
+      element: SuspenseWrapper(Fiat, true),
     },
     { path: '*', element: <Navigate to="/" replace /> }
   ])
