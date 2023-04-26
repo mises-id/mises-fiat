@@ -19,14 +19,14 @@ const Screen:FC<Iprops> = (props) => {
   }, [])
   const screenList = [{
     description: `Buy and sell cryptocurrencies easily and quickly`,
-    url: '1@2x.png'
+    url: '1@2x.jpg'
   }, {
     description: `Support mainstream payment methods including credit cards, debit cards. E-wallets, etc.`,
-    url: '2@2x.png'
+    url: '2@2x.jpg'
   }, {
     description: `Viewable transaction history and 
     progress in "Menu-Transactions" (a complete transaction may take several minutes)`,
-    url: '3@2x.png'
+    url: '3@2x.jpg'
   },]
   const items = screenList.map((item, index) => (
     <Swiper.Item key={index}>
