@@ -4,3 +4,36 @@
   // height: 98vh;
   flex: 1
 }
+.nav-page{
+  max-width: 300px;
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  .nav-logo{
+    display: block;
+    margin: 60px auto 75px;
+  }
+  .sell-btn{
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    & >span{
+      width: calc(100% - 2px);
+      height: calc(100% - 2px);
+      border-radius: 1000px;
+      background: white;
+    }
+  }
+  .adm-button{
+    & >span{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .arrow{
+        margin-left: 10px;
+      }
+    }
+  }
+}

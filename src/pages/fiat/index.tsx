@@ -6,6 +6,7 @@ import { logEvent } from "firebase/analytics";
 // import { Button, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import Screen from "@/components/screen";
+import { Button, Image } from "antd-mobile";
 const Home = () => {
   // Definition Ramp SDK
   // const initRamp = () => {
@@ -18,13 +19,13 @@ const Home = () => {
   //       language: 'en-US' 
   //     });
   //     ramp.init();
-  
+
   //     // The callback triggered by the return button after the order payment is successful
   //     ramp.on('RAMP_WIDGET_CLOSE', () => {
   //       console.log('running ramp.on')
   //       gotoTradeHistory(ramp)
   //     })
-      
+
   //     return ramp
   //   } catch (error: any) {
   //     if (error.toString().indexOf('[Ramp SDK] =>') > -1) {
@@ -34,7 +35,7 @@ const Home = () => {
   //       })
   //     }
   //   }
-    
+
   // }
 
   const analytics = useAnalytics()
@@ -50,12 +51,11 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const close = ()=>{
+  const navTo = (type = 'buy') => {
     const url = process.env.REACT_APP_NODE_ENV === 'production' ? 'https://ramp.alchemypay.org/' : 'https://ramptest.alchemypay.org/';
-    window.location.href = `${url}?appId=${process.env.REACT_APP_APPID!}`
+    window.location.href = `${url}?appId=${process.env.REACT_APP_APPID!}&showtable=${type}&type=${type}`
   }
 
-  // const gotoTelegram = ()=> window.open('https://t.me/+2KK5JivrORwzODg1', 'target=_blank')
   return (
     <>
       {/* <div className="top-bar">
@@ -74,19 +74,34 @@ const Home = () => {
         </div>
       </div>}
       {!error && <div id="rampView"></div>} */}
-      <Screen close={close}/>
-      {/* <FloatingBubble
-        style={{
-          '--initial-position-bottom': '20vh',
-          '--initial-position-right': '5px',
-          '--edge-distance': '5px',
-          "--size": '48px',
-          '--background': 'none'
-        }}
-        onClick={gotoTelegram}
-      >
-        <Image src="/images/question.jpg" width={48} height={48} lazy={false} />
-      </FloatingBubble> */}
+      <div className="nav-page">
+        <Image src="/images/logo@2x.png" width={120} height={73} className="nav-logo" />
+        <Button block shape="rounded"
+          onClick={() => navTo('buy')}
+          style={{
+            "backgroundImage": 'linear-gradient(to right, #5D61FF 30%, #19B1F1)',
+            '--text-color': '#FFFFFF',
+            'height': 45
+          }}>
+          <span>
+            Buy Crypto
+          </span>
+          <Image src="/images/arrow@2x.png" width={14} height={12} className="arrow"/>
+        </Button>
+        <Button block shape="rounded"
+          onClick={() => navTo('sell')}
+          className="sell-btn" style={{
+            "backgroundImage": 'linear-gradient(to right, #5D61FF 30%, #19B1F1)',
+            '--text-color': '#0B7DE3',
+            'height': 45,
+          }}>
+          <span>
+            Sell Crypto
+          </span>
+          <Image src="/images/arrow_blue@2x.png" width={14} height={12}  className="arrow"/>
+        </Button>
+      </div>
+      <Screen />
     </>
   );
 };
