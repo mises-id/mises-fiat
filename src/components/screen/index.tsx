@@ -12,8 +12,6 @@ const Screen:FC<Iprops> = (props) => {
     if (!isFirstLoad) {
       setopen(true)
       localStorage.setItem('isFirstLoad', 'true')
-    }else{
-      props.close?.()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -49,7 +47,6 @@ const Screen:FC<Iprops> = (props) => {
       showCloseButton
       onClose={()=>{
         setopen(false)
-        props.close?.()
       }}
       className="screen-container">
       <p className='screen-title'>Crypto Ramp</p>
@@ -59,7 +56,6 @@ const Screen:FC<Iprops> = (props) => {
         </Swiper>
         <Button type="button" color='primary' shape='rounded' block className='apply-btn' onClick={()=>{
           setopen(false)
-          props.close?.()
         }}>Start Now</Button>
       </div>
     </CenterPopup>
