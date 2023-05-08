@@ -134,7 +134,7 @@ const Home = () => {
   
   const getInputChange = (val: string) => {
     if(val){
-      const value = val.replace(/[^\d^\.?]+/g, "")?.replace(/^0+(\d)/, "$1")?.replace(/^\./, "0.")?.match(/^\d*(\.?\d{0,6})/g)?.[0] || "";
+      const value = val.replace(/[^\d^.?]+/g, "")?.replace(/^0+(\d)/, "$1")?.replace(/^\./, "0.")?.match(/^\d*(\.?\d{0,6})/g)?.[0] || "";
       setamount(value)
 
       if(value === '0' || Number(value) === 0) {
