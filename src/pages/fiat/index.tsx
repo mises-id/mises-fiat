@@ -6,7 +6,7 @@ import { logEvent } from "firebase/analytics";
 // import { Button, Result } from "antd-mobile";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import Screen from "@/components/screen";
-import { Button, Skeleton, Toast } from "antd-mobile";
+import { Button, Skeleton } from "antd-mobile";
 // eslint-disable-next-line
 import crypto from 'crypto-browserify';
 import { Buffer } from "buffer";
@@ -33,7 +33,7 @@ const Home = () => {
       });
 
       settokens(getAllTokens)
-      console.log(getAllTokens)
+      
       const [findFirst] = getAllTokens
       setdefaultTokenAddress(findFirst.id)
     })
@@ -174,7 +174,7 @@ const Home = () => {
   
   const sell = ()=>{
     const params = getTokenItem()
-    
+
     if(params){
       navTo('sell', {
         cryptoName: params.crypto,

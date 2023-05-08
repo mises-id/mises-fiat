@@ -7,7 +7,6 @@
  */
 import { Toast } from 'antd-mobile';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
-import { fingerprintId } from '.';
 const headers:{[key: string]: string} = {
   'Content-Type': 'application/json'
 }
