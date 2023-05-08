@@ -25,11 +25,13 @@ const Home = () => {
 
       let getAllTokens:token[] = []
       tokenList.forEach((element: any) => {
-        element.sellNetworkList.forEach((val: token) => {
-          val.networkLogo = element.logoUrl
-          val.crypto = val.coin
-        });
-        getAllTokens = [...getAllTokens, ...element.sellNetworkList]
+        if(element.sellNetworkList){
+          element.sellNetworkList.forEach((val: token) => {
+            val.networkLogo = element.logoUrl
+            val.crypto = val.coin
+          });
+          getAllTokens = [...getAllTokens, ...element.sellNetworkList]
+        }
       });
 
       settokens(getAllTokens)
