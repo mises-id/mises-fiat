@@ -85,7 +85,7 @@ const Home = () => {
     cryptoName: string,
     network: string
   }) => {
-    const url = process.env.REACT_APP_NODE_ENV !== 'production' ? 'https://ramp.alchemypay.org/' : 'https://ramptest.alchemypay.org/';
+    const url = process.env.REACT_APP_NODE_ENV === 'production' ? 'https://ramp.alchemypay.org/' : 'https://ramptest.alchemypay.org/';
     let params = `?appId=${process.env.REACT_APP_APPID!}&showtable=${type}&type=${type}`
 
     if(type === 'sell') {
