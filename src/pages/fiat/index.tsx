@@ -7,6 +7,9 @@ import { logEvent } from "firebase/analytics";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import Screen from "@/components/screen";
 import { Button, Image } from "antd-mobile";
+// eslint-disable-next-line
+import crypto from 'crypto-browserify';
+import { Buffer } from "buffer";
 const Home = () => {
   // Definition Ramp SDK
   // const initRamp = () => {
@@ -51,9 +54,35 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const encrypt = ()=>{
+    try {
+      const secretKeyData = process.env.REACT_APP_SECRET!
+      const plainTextData = Buffer.from(`appId=${process.env.REACT_APP_APPID!}`, 'utf8');
+      const secretKey = Buffer.from(secretKeyData, 'utf8');
+      const iv = secretKeyData.substring(0, 16);
+      
+      const cipher = crypto.createCipheriv('aes-128-cbc', secretKey, iv);
+  
+      let encrypted = cipher.update(plainTextData);
+      encrypted = Buffer.concat([encrypted, cipher.final()]);
+  
+      return encrypted.toString('base64');
+    } catch (e: any) {
+      console.log(`AES encrypting exception, msg is ${e.toString()}`);
+    }
+    return null;
+  }
   const navTo = (type = 'buy') => {
     const url = process.env.REACT_APP_NODE_ENV === 'production' ? 'https://ramp.alchemypay.org/' : 'https://ramptest.alchemypay.org/';
-    window.location.href = `${url}?appId=${process.env.REACT_APP_APPID!}&showtable=${type}&type=${type}`
+    let params = `?appId=${process.env.REACT_APP_APPID!}&showtable=${type}&type=${type}`
+    if(type === 'sell') {
+      const ciphertext = encrypt()
+      if(ciphertext){
+        const urlEncodeText = encodeURIComponent(ciphertext)
+        params+=`&sign=${urlEncodeText}`
+      }
+    }
+    window.location.href = `${url}${params}`
   }
 
   return (
