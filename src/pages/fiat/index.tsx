@@ -21,7 +21,7 @@ const Home = () => {
     logEvent(analytics, 'open_fiat_page')
     // navTo('sell')
     getCryptoList().then((res: any)=>{
-      const tokenList = res.cryptoCurrencyResponse.cryptoCurrencyList.filter((val: any)=>val.isSell === 1)
+      const tokenList = res.cryptoCurrencyResponse.cryptoCurrencyList.filter((val: any)=>val.isSell === 1).filter((val: any)=>val)
 
       let getAllTokens:token[] = []
       tokenList.forEach((element: any) => {
