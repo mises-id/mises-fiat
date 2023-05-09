@@ -1,19 +1,23 @@
 import { ButtonProps, CenterPopup, DotLoading, Image, Input, List } from 'antd-mobile'
-import { Dispatch, FC, SetStateAction, useCallback, useState } from 'react'
+import { FC, memo, useState } from 'react'
 import './index.less'
 import { CheckOutline, DownOutline, SearchOutline } from 'antd-mobile-icons'
 
 import { useRequest } from 'ahooks';
+import { rampType } from '@/pages/fiat';
+import { useMemo } from 'react';
 
 interface Iprops extends ButtonProps {
   tokens?: token[],
   selectTokenAddress?: number,
-  setTokenAddress?: Dispatch<SetStateAction<number | undefined>>
+  selectedType: rampType | 'buycrypto',
+  onChange?: (value: number | undefined) => void
 }
 
 const SelectTokens: FC<Iprops> = (props) => {
   const [searchName, setsearchName] = useState('')
-  const tokenList = useCallback(
+  const [tokenAddress, setTokenAddress] = useState(props.selectTokenAddress)
+  const tokenList = useMemo(
     () => {
       if (props.tokens) {
         const getTokenList = props.tokens.filter(val => {
@@ -31,25 +35,40 @@ const SelectTokens: FC<Iprops> = (props) => {
     [props.tokens, searchName],
   )
 
-  const findToken = useCallback(
+  const findToken = useMemo(
     () => {
-      if (props.selectTokenAddress && props.tokens) {
-        return props.tokens && props.tokens.find(val=>props.selectTokenAddress === val.id)
+      if (tokenAddress && props.tokens) {
+        return props.tokens && props.tokens.find(val=>tokenAddress === val.id)
       }
     },
-    [props.selectTokenAddress, props.tokens],
+    [tokenAddress, props.tokens],
   )
 
   const SelectedToken = () => {
-    const token = findToken()
+    const token = findToken
+    if(props.selectedType === "buycrypto"){
+      return <div className='buycrypto-token-item flex items-center justify-between'>
+        <div className="flex items-center">
+          <Image
+            width={24}
+            height={24}
+            lazy={false}
+            src={token?.networkLogo}
+          />
+          <span className='buycrypto-symbol'>{token?.crypto}</span>
+        </div>
+        <div className='networkName'>- {token?.networkName}</div>
+      </div>
+    }
     return <div className='token-item flex'>
       <div className="flex items-center">
         <Image
           width={24}
           height={24}
+          lazy={false}
           src={token?.networkLogo}
         />
-        <span className='symbol'>{token?.crypto}</span>
+        <span className='symbol'>{props.selectedType === rampType.sell ? token?.crypto : token?.networkName}</span>
       </div>
       <DownOutline className='downOutline' />
     </div>
@@ -78,13 +97,15 @@ const SelectTokens: FC<Iprops> = (props) => {
   });
 
   const selectToken = (token?: token) => {
-    props.setTokenAddress?.(token?.id)
+    setTokenAddress(token?.id)
     setopen(false)
+    props.onChange?.(token?.id)
   }
+  
   return <div>
     <div>
       <div onClick={showTokenList}>
-        {props.selectTokenAddress ? <SelectedToken /> : <UnSelectedToken />}
+        {tokenAddress ? <SelectedToken /> : <UnSelectedToken />}
       </div>
 
       <CenterPopup
@@ -98,7 +119,7 @@ const SelectTokens: FC<Iprops> = (props) => {
         }}
         className="dialog-container">
         <div className='dialog-header-container'>
-          <p className='dialog-title'>Select a token</p>
+          <p className='dialog-title'>{props.selectedType === rampType.buy ? 'Select country / region' : 'Select token'}</p>
           <div className='search-input-container'>
             <SearchOutline className='search-icon' />
             <Input className='search-input' placeholder='Search name' onChange={run}></Input>
@@ -110,19 +131,20 @@ const SelectTokens: FC<Iprops> = (props) => {
             '--border-inner': 'none',
             '--border-bottom': 'none',
             '--border-top': 'none',
+            '--padding-right': '4px',
             height: window.innerHeight / 2,
             overflow: 'auto'
           }}>
           {/* eslint-disable-next-line react-hooks/exhaustive-deps */}
-          {tokenList().map((item,index)=>{
+          {tokenList.map((item,index)=>{
             return <List.Item
               key={index}
               arrow={false}
               onClick={()=>selectToken(item)}
-              className={props.selectTokenAddress === item?.id ? 'selected-item' : ''}
+              className={tokenAddress === item?.id ? 'selected-item' : ''}
               extra={
                 <div className='token-balance'>
-                  {props.selectTokenAddress === item?.id && <CheckOutline className='selected-icon'/>}
+                  {tokenAddress === item?.id && <CheckOutline className='selected-icon'/>}
                 </div>
               }
               prefix={
@@ -134,15 +156,15 @@ const SelectTokens: FC<Iprops> = (props) => {
                     width={36}
                     height={36}
                   />
-                  <div className='networkLogo'>
+                  {item.logo && <div className='networkLogo'>
                     <Image
-                      src={item?.logo}
+                      src={item.logo}
                       style={{ borderRadius: 20 }}
                       fit='cover'
                       width={15}
                       height={15}
                     />
-                  </div>
+                  </div>}
                 </div>
               }
             >
@@ -157,4 +179,5 @@ const SelectTokens: FC<Iprops> = (props) => {
     </div>
   </div>
 }
-export default SelectTokens
+export default memo(SelectTokens, ((prevProps: Readonly<Iprops>, nextProps: Readonly<Iprops>) => true))
+
