@@ -13,7 +13,6 @@ import { Buffer } from "buffer";
 import TokenInput from "@/components/tokenInput";
 import { getCryptoList, getFiatList, quote } from "@/api/ramp";
 import BigNumber from "bignumber.js";
-import { useRequest } from "ahooks";
 
 const isIos = /(iPhone|iPad)/i.test(navigator.userAgent)
 
@@ -31,6 +30,31 @@ const Home = () => {
   const [fiats, setfiats] = useState<fiat[]>([])
 
   const [currentType, setcurrentType] = useState<rampType>(rampType.buy)
+
+  const getQuote = async (buyToken: token, fiat?: fiat) =>{
+    const data = {
+      currency: fiat?.currency,
+      country: fiat?.country,
+      network: buyToken?.network,
+      cryptoName: buyToken?.crypto
+    }
+    const params = getUrlParmas(rampType.buy, data, fiat?.payMin as unknown as string)
+    const res = await quote(params)
+    if(res.alpha2 === fiat?.country){
+      return res
+    }
+  }
+
+  const fistTokenChange = async (fiats: fiat[], buyTokens: token[]) => {
+    const [fiat] = fiats;
+    const [buytoken] = buyTokens
+    const res = await getQuote(buytoken, fiat)
+    if(res){
+      fiats[0].payMin = res.minAmount
+      fiats[0].payMax = res.maxAmount
+      setfiats([...fiats])
+    }
+  }
 
   const initRamp = async () => {
     const cryptoData = await getCryptoList()
@@ -64,7 +88,6 @@ const Home = () => {
     });
 
     const [findFirst] = getAllBuyTokens
-
     setselectedBuyToken(findFirst.id)
     setbuyTokens(getAllBuyTokens)
 
@@ -104,8 +127,9 @@ const Home = () => {
       }).filter((val: fiat) => val)
 
       const [findFirst] = fiatList
-      setselectedToken(findFirst.id)
       setfiats(fiatList)
+      setselectedToken(findFirst.id)
+      fistTokenChange(fiatList, getAllBuyTokens)
     })
   }
 
@@ -185,8 +209,8 @@ const Home = () => {
         fiatAmount: paramsAmount || amount,
         fiat,
         country,
-        network: buyToken?.network,
-        crypto: buyToken?.crypto
+        network: networkParams.network || buyToken?.network,
+        crypto: networkParams.cryptoName || buyToken?.crypto
       })
       params += urlParams
     }
@@ -213,19 +237,12 @@ const Home = () => {
           <span className="company-name">Mises</span>
           <span className="feature-name">Ramp</span>
         </div>
-        {/* <div>
-          <Button color="primary" onClick={() => navTo('buy')} fill="outline" shape="rounded" size="mini" >
-            On Ramp
-          </Button>
-        </div> */}
       </div>
     </div>
   }
 
   const tokenList = useMemo(
-    () => {
-      return currentType === rampType.buy ? fiats : tokens
-    },
+    () => currentType === rampType.buy ? fiats : tokens,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentType, fiats, tokens],
   )
@@ -249,33 +266,6 @@ const Home = () => {
       isMax: isMax === 1
     }
   }
-
-  const getQuote = async (token: fiat, value: string) =>{
-    const params = getUrlParmas(rampType.buy, {
-      currency: token?.currency,
-      country: token?.country
-    }, value)
-    const res = await quote(params)
-    if(res.alpha2 !== token?.country){
-      console.log(res, '111')
-      const { isMin, isMax } = getMaxOrMin(value, res?.maxAmount, res?.minAmount)
-      console.log(isMin, isMax)
-      let message = ''
-      if (isMin) {
-        message = `The minimum transaction amount is ${token?.currency}${res?.minAmount.toFixed()}.`
-      }
-      if (isMax) {
-        message = `The maximum transaction amount is ${token?.currency}${res?.maxAmount}.`
-      }
-
-      seterrorMessage(message)
-    }
-  }
-
-  const { run } = useRequest(getQuote, {
-    debounceWait: 350,
-    manual: true,
-  });
 
   const getInputChange = (val: string) => {
     if (val) {
@@ -314,8 +304,6 @@ const Home = () => {
         }
 
         seterrorMessage(message)
-
-        run(token, value)
       }
 
     } else {
@@ -356,6 +344,20 @@ const Home = () => {
       setselectedToken(val)
       setamount('')
       seterrorMessage('')
+      if(currentType === rampType.buy){
+        (async ()=>{
+          const fiatIndex = fiats.findIndex(fiat => fiat.id === val as unknown as string);
+          const token = buyTokens.find(token=> token.id === selectedBuyToken)
+          if(fiatIndex > -1 && token){
+            const res = await getQuote(token, fiats[fiatIndex])
+            if(res){
+              fiats[fiatIndex].payMin = res.minAmount
+              fiats[fiatIndex].payMax = res.maxAmount
+              setfiats([...fiats])
+            }
+          }
+        })()
+      }
     }
   }
 
@@ -370,8 +372,24 @@ const Home = () => {
       setselectedBuyToken(val)
       setamount('')
       seterrorMessage('')
+      const token = buyTokens.find(item=>item.id === val)
+      if(token) {
+        (async ()=>{
+          const res = await getQuote(token, currentTokenItem)
+          if(res){
+            const selectTokenIndex = tokens.findIndex((val: token) => val.id === selectedToken)
+            if(selectTokenIndex > -1){
+              fiats[selectTokenIndex].payMin = res.minAmount
+              fiats[selectTokenIndex].payMax = res.maxAmount
+              setfiats([...fiats])
+            }
+          }
+          
+        })()
+      }
     }
   }
+
 
   return (
     <>
