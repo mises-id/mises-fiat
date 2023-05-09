@@ -16,7 +16,8 @@ interface token {
   coin: string
   network: string,
   maxSell: number,
-  minSell: number
+  minSell: number,
+  currency: string,
 }
 
 interface fiat {

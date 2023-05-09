@@ -1,5 +1,5 @@
 import { ButtonProps, CenterPopup, DotLoading, Image, Input, List } from 'antd-mobile'
-import { FC, memo, useState } from 'react'
+import { FC, memo, useEffect, useState } from 'react'
 import './index.less'
 import { CheckOutline, DownOutline, SearchOutline } from 'antd-mobile-icons'
 
@@ -17,28 +17,34 @@ interface Iprops extends ButtonProps {
 const SelectTokens: FC<Iprops> = (props) => {
   const [searchName, setsearchName] = useState('')
   const [tokenAddress, setTokenAddress] = useState(props.selectTokenAddress)
+  useEffect(() => {
+    setTokenAddress(props.selectTokenAddress)
+  }, [props.selectTokenAddress])
+  
   const tokenList = useMemo(
     () => {
       if (props.tokens) {
+        const searchListName = props.selectedType === rampType.buy ? 'currency' : 'crypto'
         const getTokenList = props.tokens.filter(val => {
-            if (searchName && val) {
-              const regex = new RegExp(searchName.split('').join('|'))
-              return regex.test(val.crypto.toLocaleLowerCase())
-            }
-            return val
-          })
-        const findAllNameList = getTokenList.filter(val=>val?.crypto?.toLocaleLowerCase() === searchName)
+          if (searchName && val) {
+            const regex = new RegExp(searchName.split('').join('|'))
+            return regex.test(val[`${searchListName}`].toLocaleLowerCase())
+          }
+          return val
+        })
+        const findAllNameList = getTokenList.filter(val => val?.[`${searchListName}`]?.toLocaleLowerCase() === searchName)
         return findAllNameList.length > 0 ? findAllNameList : getTokenList
       }
       return []
     },
+    // eslint-disable-next-line 
     [props.tokens, searchName],
   )
 
   const findToken = useMemo(
     () => {
       if (tokenAddress && props.tokens) {
-        return props.tokens && props.tokens.find(val=>tokenAddress === val.id)
+        return props.tokens && props.tokens.find(val => tokenAddress === val.id)
       }
     },
     [tokenAddress, props.tokens],
@@ -46,7 +52,7 @@ const SelectTokens: FC<Iprops> = (props) => {
 
   const SelectedToken = () => {
     const token = findToken
-    if(props.selectedType === "buycrypto"){
+    if (props.selectedType === "buycrypto") {
       return <div className='buycrypto-token-item flex items-center justify-between'>
         <div className="flex items-center">
           <Image
@@ -101,7 +107,7 @@ const SelectTokens: FC<Iprops> = (props) => {
     setopen(false)
     props.onChange?.(token?.id)
   }
-  
+
   return <div>
     <div>
       <div onClick={showTokenList}>
@@ -136,15 +142,15 @@ const SelectTokens: FC<Iprops> = (props) => {
             overflow: 'auto'
           }}>
           {/* eslint-disable-next-line react-hooks/exhaustive-deps */}
-          {tokenList.map((item,index)=>{
+          {tokenList.map((item, index) => {
             return <List.Item
               key={index}
               arrow={false}
-              onClick={()=>selectToken(item)}
+              onClick={() => selectToken(item)}
               className={tokenAddress === item?.id ? 'selected-item' : ''}
               extra={
                 <div className='token-balance'>
-                  {tokenAddress === item?.id && <CheckOutline className='selected-icon'/>}
+                  {tokenAddress === item?.id && <CheckOutline className='selected-icon' />}
                 </div>
               }
               prefix={
@@ -179,5 +185,7 @@ const SelectTokens: FC<Iprops> = (props) => {
     </div>
   </div>
 }
-export default memo(SelectTokens, ((prevProps: Readonly<Iprops>, nextProps: Readonly<Iprops>) => true))
+export default memo(SelectTokens, ((prevProps: Readonly<Iprops>, nextProps: Readonly<Iprops>) => {
+  return prevProps.selectedType === nextProps.selectedType
+}))
 
