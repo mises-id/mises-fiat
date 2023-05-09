@@ -7,6 +7,7 @@
  */
 import { Toast } from 'antd-mobile';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+import { fingerprintId } from '.';
 const headers:{[key: string]: string} = {
   'Content-Type': 'application/json'
 }
@@ -25,10 +26,10 @@ const request = axios.create({
 // add request interceptors
 request.interceptors.request.use(
   async (config: AxiosRequestConfig) => {
-    // if(!config.headers){
-    //   config.headers = {}
-    // }
-    // config.headers['fingerprint-id'] = await fingerprintId();
+    if(!config.headers){
+      config.headers = {}
+    }
+    config.headers['fingerprint-id'] = await fingerprintId();
     return config;
   },
   function (error:any) {
