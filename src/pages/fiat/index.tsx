@@ -200,7 +200,7 @@ const Home = () => {
     currency?: string,
     country?: string
   }) => {
-    const url = process.env.REACT_APP_NODE_ENV !== 'production' ? 'https://ramp.alchemypay.org/' : 'https://ramptest.alchemypay.org/';
+    const url = process.env.REACT_APP_NODE_ENV === 'production' ? 'https://ramp.alchemypay.org/' : 'https://ramptest.alchemypay.org/';
     const params = getUrlParmas(type, networkParams)
     console.log(`${url}${params}`)
     // window.location.href = `${url}${params}`
@@ -256,7 +256,7 @@ const Home = () => {
       country: token?.country
     }, value)
     const res = await quote(params)
-    if(res.alpha2 === token?.country){
+    if(res.alpha2 !== token?.country){
       console.log(res, '111')
       const { isMin, isMax } = getMaxOrMin(value, res?.maxAmount, res?.minAmount)
       console.log(isMin, isMax)
