@@ -203,7 +203,7 @@ const Home = () => {
     const url = process.env.REACT_APP_NODE_ENV === 'production' ? 'https://ramp.alchemypay.org/' : 'https://ramptest.alchemypay.org/';
     const params = getUrlParmas(type, networkParams)
     console.log(`${url}${params}`)
-    // window.location.href = `${url}${params}`
+    window.location.href = `${url}${params}`
   }
 
   const Header = () => {
