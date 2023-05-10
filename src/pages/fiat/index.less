@@ -15,7 +15,7 @@
   }
 }
 @media screen  and (max-width: 361px){
-  .sell-container{
+  .sell-container, .sell-title{
     width: 97vw;
   }
 }
@@ -24,6 +24,7 @@
   flex: 1;
   width: 100%;
   margin: 0 auto;
+  user-select: none;
   .header{
     height: 50px;
     .header-container {
@@ -71,7 +72,7 @@
   }
   .sell-container{
     max-width: 360px;
-    margin: 50px auto;
+    margin: 0 auto;
     position: relative;
     border-radius: 16px;
     padding: 8px;
@@ -80,15 +81,29 @@
     box-sizing: border-box;
   }
   .sell-title{
-    line-height: 20px;
-    color: var(--theme-text-color);
-    margin-bottom: 15px;
+    max-width: 360px;
+    // color: var(--theme-text-color);
+    margin: 35px auto 15px;
     display: flex;
-    gap: 25px;
-    padding-left: 10px;
     font-size: 16px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    box-sizing: border-box;
     span{
+      flex: 1;
+      text-align: center;
       cursor: pointer;
+      line-height: 35px;
+      position: relative;
+      z-index: 2;
+    }
+    .dot{
+      position: absolute;
+      height: 35px;
+      width: 50%;
+      border-radius: 50px;
+      transition: all 0.3s;
     }
   }
 }
@@ -101,15 +116,20 @@
 }
 
 @media (prefers-color-scheme: dark) {
+
+  .toInput{
+    background-color: rgb(19, 26, 42);
+  }
+
   :root{
-    --theme-text-color: white;
+    --theme-text-color: rgb(119, 128, 160);
   }
   .header{
     border-bottom: 1px solid rgba(152, 161, 192, 0.24);
   }
   .sell-container{
     background: #0d111c;
-    border: 1px solid rgba(152, 161, 192, 0.24);
+    border: 1px solid rgba(38, 38, 38, 0.24);
     box-shadow: rgba(240, 185, 11, 0.16) 0px 40px 120px 0px;
   }
   .switch-token{
@@ -120,26 +140,36 @@
     border: 1px solid rgba(152, 161, 192, 0.24);
   }
   .sell-title{
+    background-color: #0d111c;
+    .dot{
+      background-color: rgb(19, 26, 42);
+    }
     span{
       color: rgb(119, 128, 160);
-      &.active{
-        color: white
-      }
+      // color: white;
     }
   }
 }
 
 @media (prefers-color-scheme: light) {
 
-  .header{
-    border-bottom: 1px solid #f0f0f0;
+  .toInput{
+    background-color: rgb(245, 246, 252);
   }
+  .sell-title {
+    background-color: rgb(245, 246, 252);
+  }
+
+  .header{
+    border-bottom: 1px solid rgba(152, 161, 192, 0.24);
+  }
+
   :root{
     --theme-text-color: #0d111c;
   }
   .sell-container{
     background: white;
-    border: 1px solid rgb(210, 217, 238);
+    border: 1px solid #f6f7f8;
     box-shadow: rgba(240, 185, 11, 0.16) 0px 40px 120px 0px;
   }
   .switch-token{
@@ -150,11 +180,22 @@
   .select-token{
     border: 1px solid rgb(210, 217, 238);
   }
+
+  .sell-title{
+    background-color: rgb(245, 246, 252);
+    .dot{
+      background-color: white;
+    }
+    span{
+      // color: rgb(119, 128, 160);
+      color: black;
+    }
+  }
   .sell-title{
     span{
-      color: rgb(119, 128, 160);
+      color: black;
       &.active{
-        color: rgb(13, 17, 28)
+        color: black
       }
     }
   }
@@ -171,5 +212,12 @@
 }
 .token-to-buy-title{
   color: var(--theme-text-color);
+  margin: 10px 0 20px;
+  padding-left: 10px;
+  font-size: 20px;
+}
+.toInput{
   margin-bottom: 10px;
+  padding: 6px 0;
+  border-radius: 12px;
 }
