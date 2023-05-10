@@ -24,13 +24,14 @@ const SelectTokens: FC<Iprops> = (props) => {
   const tokenList = useMemo(
     () => {
       if (props.tokens) {
+        const searchQuery = searchName.toLocaleLowerCase()
         const getTokenList = props.tokens.filter(val => {
           if (searchName && val) {
-            return val.crypto?.toLocaleLowerCase().indexOf(searchName) > -1 || val.currency?.toLocaleLowerCase().indexOf(searchName) > -1
+            return val.crypto?.toLocaleLowerCase().indexOf(searchQuery) > -1 || val.currency?.toLocaleLowerCase().indexOf(searchQuery) > -1
           }
           return val
         })
-        const findAllNameList = getTokenList.filter(val => val?.crypto?.toLocaleLowerCase() === searchName)
+        const findAllNameList = getTokenList.filter(val => val?.crypto?.toLocaleLowerCase() === searchQuery)
         return findAllNameList.length > 0 ? findAllNameList : getTokenList
       }
       return []
