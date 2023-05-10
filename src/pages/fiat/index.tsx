@@ -350,6 +350,7 @@ const Home = () => {
       const localSelect = getLocalSelect()
       const findItem = val === rampType.sell ? tokens.find((val: token) => val.network === "BTC" && val.crypto === 'BTC') || tokens[0] : fiats.find((val: fiat) => val.country === 'US') || fiats[0]
       if (findItem) setselectedToken(localSelect[val] || findItem.id)
+      setselectedSellToken(selectedToken)
     }
     setamount('')
     seterrorMessage('')
@@ -376,7 +377,8 @@ const Home = () => {
       initSelectList(token?.currency)
       setselectedSellToken(val)
       saveSelect({
-        sellFiatToken: val
+        sellFiatToken: val,
+        Buy: val
       })
     }
   }
