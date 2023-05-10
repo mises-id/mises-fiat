@@ -5,7 +5,6 @@
  * @LastEditors: lmk
  * @Description:
  */
-import { Toast } from 'antd-mobile';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { fingerprintId } from '.';
 const headers:{[key: string]: string} = {
@@ -41,8 +40,8 @@ request.interceptors.request.use(
 request.interceptors.response.use((response: AxiosResponse) => {
   const { data } = response;
   if (data.returnCode === '0000') return data.data;
-  Toast.show(data.returnMsg);
-  return Promise.reject(data.data);
+  // Toast.show(data.returnMsg);
+  return Promise.reject(data.returnMsg);
 });
 
 export default request;

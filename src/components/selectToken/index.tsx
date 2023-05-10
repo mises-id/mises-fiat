@@ -9,9 +9,9 @@ import { useMemo } from 'react';
 
 interface Iprops extends ButtonProps {
   tokens?: token[],
-  selectTokenAddress?: number,
-  selectedType: rampType | 'buycrypto',
-  onChange?: (value: number | undefined) => void
+  selectTokenAddress?: string,
+  selectedType: rampType | 'buycrypto' | 'sellcrypto',
+  onChange?: (value: string | undefined) => void
 }
 
 const SelectTokens: FC<Iprops> = (props) => {
@@ -24,15 +24,13 @@ const SelectTokens: FC<Iprops> = (props) => {
   const tokenList = useMemo(
     () => {
       if (props.tokens) {
-        const searchListName = props.selectedType === rampType.buy ? 'currency' : 'crypto'
         const getTokenList = props.tokens.filter(val => {
           if (searchName && val) {
-            const regex = new RegExp(searchName.split('').join('|'))
-            return regex.test(val[`${searchListName}`].toLocaleLowerCase())
+            return val.crypto?.toLocaleLowerCase().indexOf(searchName) > -1 || val.currency?.toLocaleLowerCase().indexOf(searchName) > -1
           }
           return val
         })
-        const findAllNameList = getTokenList.filter(val => val?.[`${searchListName}`]?.toLocaleLowerCase() === searchName)
+        const findAllNameList = getTokenList.filter(val => val?.crypto?.toLocaleLowerCase() === searchName)
         return findAllNameList.length > 0 ? findAllNameList : getTokenList
       }
       return []
@@ -52,18 +50,18 @@ const SelectTokens: FC<Iprops> = (props) => {
 
   const SelectedToken = () => {
     const token = findToken
-    if (props.selectedType === "buycrypto") {
+    if (["buycrypto", "sellcrypto"].includes(props.selectedType)) {
       return <div className='buycrypto-token-item flex items-center justify-between'>
         <div className="flex items-center">
           <Image
             width={24}
             height={24}
             lazy={false}
-            src={token?.networkLogo}
+            src={token?.icon}
           />
           <span className='buycrypto-symbol'>{token?.crypto}</span>
         </div>
-        <div className='networkName'>- {token?.networkName}</div>
+        <div className='networkName'>- {token?.network}</div>
       </div>
     }
     return <div className='token-item flex'>
@@ -72,9 +70,9 @@ const SelectTokens: FC<Iprops> = (props) => {
           width={24}
           height={24}
           lazy={false}
-          src={token?.networkLogo}
+          src={token?.icon}
         />
-        <span className='symbol'>{props.selectedType === rampType.sell ? token?.crypto : token?.networkName}</span>
+        <span className='symbol'>{props.selectedType === rampType.sell ? token?.crypto : token?.network}</span>
       </div>
       <DownOutline className='downOutline' />
     </div>
@@ -156,13 +154,13 @@ const SelectTokens: FC<Iprops> = (props) => {
               prefix={
                 <div className='relative'>
                   <Image
-                    src={item?.networkLogo}
+                    src={item?.icon}
                     style={{ borderRadius: 20 }}
                     fit='cover'
                     width={36}
                     height={36}
                   />
-                  {item.logo && <div className='networkLogo'>
+                  {/* {item.logo && <div className='networkLogo'>
                     <Image
                       src={item.logo}
                       style={{ borderRadius: 20 }}
@@ -170,13 +168,13 @@ const SelectTokens: FC<Iprops> = (props) => {
                       width={15}
                       height={15}
                     />
-                  </div>}
+                  </div>} */}
                 </div>
               }
             >
               <div className='flex items-center'>
                 <span className='token-name'>{item?.crypto}</span>
-                <span className='network-name'>-{item?.networkName}</span>
+                <span className='network-name'>-{item?.network}</span>
               </div>
             </List.Item>
           })}

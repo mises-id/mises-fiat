@@ -5,16 +5,16 @@ import SelectTokens from '../selectToken'
 import { rampType } from '@/pages/fiat'
 interface Iprops extends InputProps {
   tokens?: token[],
-  type: rampType | 'buycrypto',
-  defaultTokenAddress?: number,
-  onTokenChange?: (val: number | undefined) => void
+  type: rampType | 'buycrypto' | 'sellcrypto',
+  defaultTokenAddress?: string,
+  onTokenChange?: (val: string | undefined) => void
 }
 
 const TokenInput: FC<Iprops> = (props) => {
 
   return <div className='token-container'>
     <div className='flex items-center'>
-      {props.type !== 'buycrypto' &&
+      {!['buycrypto', 'sellcrypto'].includes(props.type) &&
         <Input
           className='token-input flex-1'
           {...props} />
