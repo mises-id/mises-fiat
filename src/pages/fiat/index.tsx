@@ -307,7 +307,7 @@ const Home = () => {
   const createOrder = () => {
     const url = 'https://ramp.alchemypay.org/'
     const params = getUrlParmas(currentType)
-    // console.log(`${url}${params}`)
+    console.log(`${url}${params}`)
     // window.open(`${url}${params}`, '_blank')
     window.location.href = `${url}${params}`
   }
@@ -383,6 +383,17 @@ const Home = () => {
     }
   }
 
+  const isDisabled = useMemo(
+    () => {
+      if (amount === '' || !amount || amount === '0' || Number(amount) === 0 || errorMessage) {
+        // Toast.show('Please enter the amount')
+        return true
+      }
+      return false
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [amount],
+  )
   return (
     <>
       <div className="nav-page">
@@ -437,7 +448,7 @@ const Home = () => {
 
           </div>}
           {errorMessage && <div className="erorr-message">{errorMessage}</div>}
-          <Button block disabled={!!errorMessage} shape="rounded"
+          <Button block disabled={isDisabled} shape="rounded"
             onClick={createOrder} style={{
               "backgroundImage": 'linear-gradient(to right, #5D61FF 30%, #19B1F1)',
               '--text-color': 'white',
