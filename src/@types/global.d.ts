@@ -8,19 +8,23 @@
 //   }
 // }
 interface token {
-  id: number,
+  id: string,
   crypto: string,
   networkName: string,
   logo: string,
   networkLogo: string
   coin: string
   network: string,
-  maxSell: number,
-  minSell: number,
+  maxPurchaseAmount: number,
+  maxSellAmount: number,
+  minPurchaseAmount: number,
+  minSellAmount: number,
   currency: string,
+  icon: string
 }
 
 interface fiat {
+  icon: string
   id: string,
   crypto: string,
   networkName: string,
