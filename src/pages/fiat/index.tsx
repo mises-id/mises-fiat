@@ -68,7 +68,7 @@ const Home = () => {
     const cryptoData = await getTokenList(val)
 
     const sellList = cryptoData.filter((val: any) => val.sellEnable === 1).map((val: token) => {
-      val.id = val.network + val.crypto
+      val.id = `${val.network}-${val.crypto}`
       return val
     })
 
@@ -76,7 +76,7 @@ const Home = () => {
     settokens(sellList)
 
     const buyList = cryptoData.filter((val: any) => val.buyEnable === 1).map((val: token) => {
-      val.id = val.network + val.crypto
+      val.id = `${val.network}-${val.crypto}`
       return val
     })
     
@@ -115,7 +115,7 @@ const Home = () => {
     fiatList = fiatList.map((val: fiat) => {
       val.crypto = val.countryName
       val.network = val.currency
-      val.id = val.network + val.crypto
+      val.id = `${val.network}-${val.crypto}`
       val.icon = `https://static.alchemypay.org/alchemypay/flag/${val.country}.png`
       return val
     }).filter((val: fiat) => val.countryName)
@@ -133,8 +133,10 @@ const Home = () => {
 
   useEffect(() => {
     logEvent(analytics, 'open_fiat_page')
-    initSelectList()
+    const localSelect = getLocalSelect()
+    const currency = localSelect[currentType]?.split('-')[0]
     initFiatList()
+    initSelectList(currency)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
