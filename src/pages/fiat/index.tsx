@@ -398,43 +398,40 @@ const Home = () => {
     <>
       <div className="nav-page">
         <Header />
+        <div className="sell-title">
+          <span className={currentType === rampType.buy ? 'active' : ''} onClick={() => setcurrentRampType(rampType.buy)}>Buy</span>
+          <span className={currentType === rampType.sell ? 'active' : ''} onClick={() => setcurrentRampType(rampType.sell)}>Sell</span>
+          <div className="dot" style={{left: currentType === rampType.buy ? '5px': 'calc(50% - 5px)'}}></div>
+        </div>
         <div className="sell-container">
-          <p className="sell-title">
-            <span className={currentType === rampType.buy ? 'active' : ''} onClick={() => setcurrentRampType(rampType.buy)}>Buy</span>
-            <span className={currentType === rampType.sell ? 'active' : ''} onClick={() => setcurrentRampType(rampType.sell)}>Sell</span>
-          </p>
-
+          <p className="token-to-buy-title">{currentType === rampType.buy ? 'Token to buy' : 'Fiat to receive'}</p>
           {!selectedToken && <Skeleton animated className="custom-skeleton" />}
           {selectedToken && <div>
-            {currentType === rampType.buy ?
-              (
-                selectedBuyToken ?
-                  <div className="select-token">
-                    <p className="token-to-buy-title">Token to buy</p>
+            <div className="toInput">
+              {currentType === rampType.buy ?
+                (
+                  selectedBuyToken ?
                     <TokenInput
                       className="buycrypto"
                       type='buycrypto'
                       onTokenChange={getBuyTokenChange}
                       tokens={buyTokens}
                       defaultTokenAddress={selectedBuyToken} />
-                  </div>
-                  :
-                  <Skeleton animated className="custom-skeleton" />
-              ) : (
-                selectedSellToken ?
-                  <div className="select-token">
-                    <p className="token-to-buy-title">Fiat to sell</p>
+                    :
+                    <Skeleton animated className="custom-skeleton" />
+                ) : (
+                  selectedSellToken ?
                     <TokenInput
                       className="buycrypto"
                       type='sellcrypto'
                       onTokenChange={getFiatTokenChange}
                       tokens={fiats as unknown as token[]}
                       defaultTokenAddress={selectedSellToken} />
-                  </div>
-                  :
-                  <Skeleton animated className="custom-skeleton" />
-              )
-            }
+                    :
+                    <Skeleton animated className="custom-skeleton" />
+                )
+              }
+            </div>
             <TokenInput
               type={currentType}
               onChange={getInputChange}
