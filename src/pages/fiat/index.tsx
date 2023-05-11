@@ -64,6 +64,7 @@ const Home = () => {
     if(local) return JSON.parse(local)
     return {}
   }
+  
   const initSelectList = async (val: string = "USD") => {
     const cryptoData = await getTokenList(val)
 
@@ -102,13 +103,17 @@ const Home = () => {
       if (!isIos && element.payWayName === 'Apple Pay') return;
 
       const findFiatIndex = fiatList.findIndex((val: any) => val.country === element.country && val.currency === element.currency && val.payWayName !== element.payWayName)
-
       if (findFiatIndex > -1) {
         const fiat = fiatList[findFiatIndex]
         const isMin = fiat.payMin ? BigNumber(fiat.payMin).comparedTo(element.payMin) : 0;
 
         if (isMin === 1) {
           fiatList[findFiatIndex] = element
+        }
+        const isMax = fiat.payMax ? BigNumber(element.payMax).comparedTo(fiat.payMax) : 0;
+
+        if(isMax === 1){
+          fiatList[findFiatIndex].payMax = element.payMax
         }
       }
     });
@@ -204,12 +209,11 @@ const Home = () => {
   const [amount, setamount] = useState('')
   const [errorMessage, seterrorMessage] = useState('');
   const getMaxOrMin = (value: string, max?: number, min?: number,) => {
-    const isMax = max ? BigNumber(value).comparedTo(max) : 0
-    const isMin = min ? BigNumber(min).comparedTo(value) : 0
-
+    const isMax = max ? BigNumber(value).comparedTo(max) : -1
+    const isMin = min ? BigNumber(min).comparedTo(value) : -1
     return {
-      isMin: isMin === 1,
-      isMax: isMax === 1
+      isMin: [1].includes(isMin) || false,
+      isMax: [1].includes(isMax) || false
     }
   }
   const getInputChange = (val: string) => {
@@ -238,14 +242,28 @@ const Home = () => {
       } else {
         let message = ''
         const token = buyTokens.find(token => token.id === selectedBuyToken)
-        const { isMin, isMax } = getMaxOrMin(value, token?.maxPurchaseAmount, token?.minPurchaseAmount)
+        const findFiat = fiats.find(val=>val.id === currentTokenItem?.id)
+
+        let maxNumber = token?.maxPurchaseAmount
+        let minNumber = token?.minPurchaseAmount
+
+        if(findFiat){
+          const isMin = BigNumber(findFiat.payMin).comparedTo(token?.minPurchaseAmount || 0);
+          const isMax = BigNumber(findFiat.payMax).comparedTo(token?.maxPurchaseAmount || 0);
+
+          console.log(token, findFiat, isMax, isMin)
+          if(isMin === 1) minNumber = findFiat.payMin
+          if(isMax === 1) maxNumber = token?.maxPurchaseAmount
+        }
+
+        const { isMin, isMax } = getMaxOrMin(value, maxNumber, minNumber)
 
         if (isMin) {
-          message = `The minimum transaction amount is ${currentTokenItem?.currency}${token?.minPurchaseAmount}.`
+          message = `The minimum transaction amount is greater than ${currentTokenItem?.currency}${minNumber}.`
         }
 
         if (isMax) {
-          message = `The maximum transaction amount is ${currentTokenItem?.currency}${token?.maxPurchaseAmount}.`
+          message = `The maximum transaction amount is less than ${currentTokenItem?.currency}${maxNumber}.`
         }
 
         seterrorMessage(message)
@@ -394,6 +412,7 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [amount],
   )
+
   return (
     <>
       <div className="nav-page">
