@@ -252,18 +252,18 @@ const Home = () => {
           const isMax = BigNumber(findFiat.payMax).comparedTo(token?.maxPurchaseAmount || 0);
 
           console.log(token, findFiat, isMax, isMin)
-          if(isMin === 1) minNumber = findFiat.payMin
+          if(isMin === 1) minNumber = BigNumber(findFiat.payMin || 0).plus((findFiat.payMin || 0) * 0.01).toNumber()
           if(isMax === 1) maxNumber = token?.maxPurchaseAmount
         }
 
         const { isMin, isMax } = getMaxOrMin(value, maxNumber, minNumber)
 
         if (isMin) {
-          message = `The minimum transaction amount is greater than ${currentTokenItem?.currency}${minNumber}.`
+          message = `The minimum transaction amount is ${currentTokenItem?.currency}${minNumber}.`
         }
 
         if (isMax) {
-          message = `The maximum transaction amount is less than ${currentTokenItem?.currency}${maxNumber}.`
+          message = `The maximum transaction amount is ${currentTokenItem?.currency}${maxNumber}.`
         }
 
         seterrorMessage(message)
