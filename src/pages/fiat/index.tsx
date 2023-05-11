@@ -209,12 +209,11 @@ const Home = () => {
   const [amount, setamount] = useState('')
   const [errorMessage, seterrorMessage] = useState('');
   const getMaxOrMin = (value: string, max?: number, min?: number,) => {
-    const isMax = max ? BigNumber(value).comparedTo(max) : 0
-    const isMin = min ? BigNumber(min).comparedTo(value) : 0
-
+    const isMax = max ? BigNumber(value).comparedTo(max) : -1
+    const isMin = min ? BigNumber(min).comparedTo(value) : -1
     return {
-      isMin: isMin === 1,
-      isMax: isMax === 1
+      isMin: [1].includes(isMin) || false,
+      isMax: [1].includes(isMax) || false
     }
   }
   const getInputChange = (val: string) => {
@@ -251,19 +250,20 @@ const Home = () => {
         if(findFiat){
           const isMin = BigNumber(findFiat.payMin).comparedTo(token?.minPurchaseAmount || 0);
           const isMax = BigNumber(findFiat.payMax).comparedTo(token?.maxPurchaseAmount || 0);
+
           console.log(token, findFiat, isMax, isMin)
           if(isMin === 1) minNumber = findFiat.payMin
-          if(isMax === 1) maxNumber = findFiat.payMax
+          if(isMax === 1) maxNumber = token?.maxPurchaseAmount
         }
 
         const { isMin, isMax } = getMaxOrMin(value, maxNumber, minNumber)
 
         if (isMin) {
-          message = `The minimum transaction amount is ${currentTokenItem?.currency}${minNumber}.`
+          message = `The minimum transaction amount is greater than ${currentTokenItem?.currency}${minNumber}.`
         }
 
         if (isMax) {
-          message = `The maximum transaction amount is ${currentTokenItem?.currency}${maxNumber}.`
+          message = `The maximum transaction amount is less than ${currentTokenItem?.currency}${maxNumber}.`
         }
 
         seterrorMessage(message)
