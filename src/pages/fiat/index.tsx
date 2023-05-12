@@ -100,7 +100,7 @@ const Home = () => {
         return
       }
 
-      if (!isIos && element.payWayName === 'Apple Pay') return;
+      if ((!isIos && element.payWayName === 'Apple Pay') || element.payMin === 0 || element.payMax === 0) return;
 
       const findFiatIndex = fiatList.findIndex((val: any) => val.country === element.country && val.currency === element.currency && val.payWayName !== element.payWayName)
       if (findFiatIndex > -1) {
