@@ -46,7 +46,7 @@
     "web3": "^1.7.3"
   },
   "scripts": {
-    "start": "PORT=2333 REACT_APP_NODE_ENV=test craco start",
+    "start": "PORT=2334 REACT_APP_NODE_ENV=test craco start",
     "build": "REACT_APP_NODE_ENV=production craco build",
     "build:test": "REACT_APP_NODE_ENV=test craco build",
     "test": "craco test",
