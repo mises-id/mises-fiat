@@ -88,8 +88,8 @@ const Home = () => {
     if (findBtc) setselectedBuyToken(localSelect.buyToken || findBtc.id)
   }
 
-  const initFiatList = async () => {
-    const fiatData = await getFiatList()
+  const initFiatList = async (type?: rampType) => {
+    const fiatData = await getFiatList((type || currentType).toLocaleUpperCase())
     let fiatList: any = [];
 
     fiatData.forEach((element: any) => {
@@ -133,14 +133,14 @@ const Home = () => {
       setselectedSellToken(localSelect.sellFiatToken ||findUs.id)
       // fistTokenChange(fiatList, getAllBuyTokens)
     }
-    setfiats(fiatList)
+    setfiats([...fiatList])
   }
 
   useEffect(() => {
     logEvent(analytics, 'open_fiat_page')
     const localSelect = getLocalSelect()
     const currency = localSelect[currentType]?.split('-')[0]
-    initFiatList()
+    initFiatList(currentType)
     initSelectList(currency)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -361,6 +361,7 @@ const Home = () => {
   }
 
   const setcurrentRampType = (val: rampType) => {
+    initFiatList(val)
     setcurrentType(val)
     if(selectedSellToken && val === rampType.buy){
       setselectedToken(selectedSellToken)
