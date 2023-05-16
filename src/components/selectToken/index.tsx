@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 interface Iprops extends ButtonProps {
   tokens?: token[],
   selectTokenAddress?: string,
-  selectedType: rampType | 'buycrypto' | 'sellcrypto',
+  selectedType: rampType | 'buycrypto' | 'sellFiat',
   onChange?: (value: string | undefined) => void
 }
 
@@ -51,7 +51,7 @@ const SelectTokens: FC<Iprops> = (props) => {
 
   const SelectedToken = () => {
     const token = findToken
-    if (["buycrypto", "sellcrypto"].includes(props.selectedType)) {
+    if (["buycrypto", "sellFiat"].includes(props.selectedType)) {
       return <div className='buycrypto-token-item flex items-center justify-between'>
         <div className="flex items-center">
           <Image
