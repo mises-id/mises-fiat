@@ -70,8 +70,8 @@ const Home = () => {
   const initFiatList = async (type?: rampType) => {
     const fiatData = await getFiatList((type || currentType).toLocaleUpperCase())
     let fiatList: any = [];
-
-    fiatData.forEach((element: any) => {
+    
+    fiatData.filter((element: any)=>isIos ? true : element.payWayName !== 'Apple Pay').forEach((element: any) => {
       const hasFiatForList = fiatList.some((val: any) => val.country === element.country && val.currency === element.currency)
 
       if (!hasFiatForList) {
@@ -79,7 +79,7 @@ const Home = () => {
         return
       }
 
-      if ((!isIos && element.payWayName === 'Apple Pay') || element.payMin === 0 || element.payMax === 0) return;
+      if (element.payMin === 0 || element.payMax === 0) return;
 
       const findFiatIndex = fiatList.findIndex((val: any) => val.country === element.country && val.currency === element.currency && val.payWayName !== element.payWayName)
       if (findFiatIndex > -1) {
@@ -178,10 +178,10 @@ const Home = () => {
   const currentTokenItem = useMemo(
     (): token & fiat | undefined => {
       const getTokenList: any = tokenList
-      return getTokenList.find((val: token | fiat) => val.id === selectedToken || val.id === selectedSellToken)
+      return getTokenList.find((val: token | fiat) => val.id === selectedToken)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedToken, selectedSellToken],
+    [selectedToken],
   )
 
   const [amount, setamount] = useState('')
@@ -205,7 +205,7 @@ const Home = () => {
 
       if (currentType === rampType.sell) {
         let message = ''
-        const token = currentTokenItem
+        const token = buyTokens.find(val => val.id === selectedSellToken)
         const { isMin, isMax } = getMaxOrMin(value, token?.maxSellAmount, token?.minSellAmount)
 
         if (isMin) {
@@ -258,11 +258,12 @@ const Home = () => {
     let params = `?appId=${process.env.REACT_APP_APPID!}&showtable=${urlType}&type=${urlType}`
 
     if (type === rampType.sell) {
-      const sellToken = fiats.find(val => val.id === selectedSellToken)
+      const sellToken = buyTokens.find(val => val.id === selectedSellToken)
+      const sellFiat = fiats.find(val => val.id === selectedSellFiat)
 
       const ciphertext = encrypt({
         cryptoAmount: amount,
-        fiat: sellToken?.currency,
+        fiat: sellFiat?.currency,
       })
 
       if (ciphertext) {
@@ -270,10 +271,10 @@ const Home = () => {
         const urlParams = formatUrlParams({
           sign: urlEncodeText,
           cryptoAmount: amount,
-          crypto: currentTokenItem?.crypto,
-          network: currentTokenItem?.network,
-          fiat: sellToken?.currency,
-          country: sellToken?.country,
+          crypto: sellToken?.crypto,
+          network: sellToken?.network,
+          fiat: sellFiat?.currency,
+          country: sellFiat?.country,
         })
         params += urlParams
       }
