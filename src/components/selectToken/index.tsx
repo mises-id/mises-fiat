@@ -185,6 +185,7 @@ const SelectTokens: FC<Iprops> = (props) => {
   </div>
 }
 export default memo(SelectTokens, ((prevProps: Readonly<Iprops>, nextProps: Readonly<Iprops>) => {
-  return prevProps.selectedType === nextProps.selectedType
+  console.log(prevProps, nextProps)
+  return prevProps.selectedType === nextProps.selectedType && JSON.stringify(prevProps.tokens) === JSON.stringify(nextProps.tokens)
 }))
 

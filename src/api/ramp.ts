@@ -28,11 +28,14 @@ export function getCryptoList(): Promise<any> {
   })
 }
 
-export function getFiatList(): Promise<any> {
+export function getFiatList(type="BUY"): Promise<any> {
   const appId = process.env.REACT_APP_APPID!
   const timestamp = new Date().getTime()
   return request({
     url: '/merchant/fiat/list',
+    params: {
+      type
+    },
     headers: {
       appId,
       timestamp,
