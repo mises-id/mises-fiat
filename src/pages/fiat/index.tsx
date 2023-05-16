@@ -24,47 +24,23 @@ export enum rampType {
 
 const Home = () => {
   const analytics = useAnalytics()
-  const [tokens, settokens] = useState<token[]>([])
-  const [selectedToken, setselectedToken] = useState<string>()
-  const [buyTokens, setbuyTokens] = useState<token[]>([])
-  const [selectedBuyToken, setselectedBuyToken] = useState<string>()
-  const [selectedSellToken, setselectedSellToken] = useState<string>()
+  const [tokens, settokens] = useState<token[]>([]) // buy token list
+  const [selectedToken, setselectedToken] = useState<string>()  // select buy fiat 
+  const [selectedBuyToken, setselectedBuyToken] = useState<string>()// select buy token
   const [fiats, setfiats] = useState<fiat[]>([])
+
+  const [buyTokens, setbuyTokens] = useState<token[]>([]) // sell token list
+  const [selectedSellToken, setselectedSellToken] = useState<string>() // select sell token
+  const [selectedSellFiat, setselectedSellFiat] = useState<string>()  // select sell token 
 
   const [currentType, setcurrentType] = useState<rampType>(rampType.buy)
 
-  // const getQuote = async (amount: string) =>{
-  //   try {
-  //     // seterrorMessage('')
-  //     const token = currentType === rampType.sell ? tokens.find(token => token.id === selectedToken) : buyTokens.find(token => token.id === selectedBuyToken)
-  //     const data = {
-  //       crypto: token?.crypto,
-  //       network: token?.network,
-  //       country: currentTokenItem?.country || 'US',
-  //       fiat: currentTokenItem?.currency || 'USD',
-  //       amount,
-  //       payWayCode: currentTokenItem?.payWayCode,
-  //       side: currentType.toLocaleUpperCase()
-  //     }
-  //     // const params = getUrlParmas(rampType.buy, data, fiat?.payMin as unknown as string)
-  //     const res = await quote(data)
-  //     // const plus = new BigNumber(res.rampFee).plus(res.networkFee)
-  //     // setdisable(false)
-  //     console.log(res)
-  //   } catch (error: any) {
-  //     // seterrorMessage(error)
-  //     console.log(error, amount)
-  //   }
-  //   // if(res.alpha2 === fiat?.country){
-  //   //   return res
-  //   // }
-  // }
-  const getLocalSelect = () =>{
+  const getLocalSelect = () => {
     const local = localStorage.getItem("rampParams")
-    if(local) return JSON.parse(local)
+    if (local) return JSON.parse(local)
     return {}
   }
-  
+
   const initSelectList = async (val: string = "USD") => {
     const cryptoData = await getTokenList(val)
 
@@ -80,12 +56,15 @@ const Home = () => {
       val.id = `${val.network}-${val.crypto}`
       return val
     })
-    
+
     // select token for buy
     setbuyTokens(buyList)
     const localSelect = getLocalSelect()
     const findBtc = buyList.find((val: token) => val.network === "BTC" && val.crypto === 'BTC') || buyList[0]
     if (findBtc) setselectedBuyToken(localSelect.buyToken || findBtc.id)
+
+    const findBuyBtc = sellList.find((val: token) => val.network === "BTC" && val.crypto === 'BTC') || buyList[0]
+    if (findBuyBtc) setselectedSellToken(localSelect.Sell || findBtc.id)
   }
 
   const initFiatList = async (type?: rampType) => {
@@ -112,7 +91,7 @@ const Home = () => {
         }
         const isMax = fiat.payMax ? BigNumber(element.payMax).comparedTo(fiat.payMax) : 0;
 
-        if(isMax === 1){
+        if (isMax === 1) {
           fiatList[findFiatIndex].payMax = element.payMax
         }
       }
@@ -129,9 +108,8 @@ const Home = () => {
     const localSelect = getLocalSelect()
 
     if (findUs) {
-      setselectedToken(localSelect[currentType] || findUs.id)
-      setselectedSellToken(localSelect.sellFiatToken ||findUs.id)
-      // fistTokenChange(fiatList, getAllBuyTokens)
+      setselectedToken(localSelect[(type || currentType)] || findUs.id)
+      setselectedSellFiat(localSelect.sellFiatToken || findUs.id)
     }
     setfiats([...fiatList])
   }
@@ -200,10 +178,10 @@ const Home = () => {
   const currentTokenItem = useMemo(
     (): token & fiat | undefined => {
       const getTokenList: any = tokenList
-      return getTokenList.find((val: token | fiat) => val.id === selectedToken)
+      return getTokenList.find((val: token | fiat) => val.id === selectedToken || val.id === selectedSellToken)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedToken],
+    [selectedToken, selectedSellToken],
   )
 
   const [amount, setamount] = useState('')
@@ -229,7 +207,7 @@ const Home = () => {
         let message = ''
         const token = currentTokenItem
         const { isMin, isMax } = getMaxOrMin(value, token?.maxSellAmount, token?.minSellAmount)
-        
+
         if (isMin) {
           message = `Minimum selling amount ${token?.minSellAmount} ${token?.crypto}.`
         }
@@ -242,18 +220,18 @@ const Home = () => {
       } else {
         let message = ''
         const token = buyTokens.find(token => token.id === selectedBuyToken)
-        const findFiat = fiats.find(val=>val.id === currentTokenItem?.id)
+        const findFiat = fiats.find(val => val.id === currentTokenItem?.id)
 
         let maxNumber = token?.maxPurchaseAmount
         let minNumber = token?.minPurchaseAmount
 
-        if(findFiat){
+        if (findFiat) {
           const isMin = BigNumber(findFiat.payMin).comparedTo(token?.minPurchaseAmount || 0);
           const isMax = BigNumber(findFiat.payMax).comparedTo(token?.maxPurchaseAmount || 0);
 
           console.log(token, findFiat, isMax, isMin)
-          if(isMin === 1) minNumber = BigNumber(findFiat.payMin || 0).plus((findFiat.payMin || 0) * 0.01).toNumber()
-          if(isMax === 1) maxNumber = token?.maxPurchaseAmount
+          if (isMin === 1) minNumber = BigNumber(findFiat.payMin || 0).plus((findFiat.payMin || 0) * 0.01).toNumber()
+          if (isMax === 1) maxNumber = token?.maxPurchaseAmount
         }
 
         const { isMin, isMax } = getMaxOrMin(value, maxNumber, minNumber)
@@ -304,18 +282,17 @@ const Home = () => {
       // const ciphertext = encrypt({
       //   fiatAmount: amount
       // })
-      console.log(buyToken, currentTokenItem)
       // if (ciphertext) {
-        // const urlEncodeText = encodeURIComponent(ciphertext)
-        const urlParams = formatUrlParams({
-          // sign: urlEncodeText,
-          fiatAmount: amount,
-          fiat: currentTokenItem?.currency,
-          country: currentTokenItem?.country,
-          network: buyToken?.network,
-          crypto: buyToken?.crypto
-        })
-        params += urlParams
+      // const urlEncodeText = encodeURIComponent(ciphertext)
+      const urlParams = formatUrlParams({
+        // sign: urlEncodeText,
+        fiatAmount: amount,
+        fiat: currentTokenItem?.currency,
+        country: currentTokenItem?.country,
+        network: buyToken?.network,
+        crypto: buyToken?.crypto
+      })
+      params += urlParams
       // }
 
     }
@@ -331,14 +308,14 @@ const Home = () => {
   }
   const saveSelect = (params: any) => {
     let getLocal: any = localStorage.getItem('rampParams')
-    if(getLocal){
+    if (getLocal) {
       getLocal = JSON.parse(getLocal)
       getLocal = {
-        ...getLocal, 
+        ...getLocal,
         ...params
       }
       localStorage.setItem('rampParams', JSON.stringify(getLocal))
-    }else{
+    } else {
       localStorage.setItem('rampParams', JSON.stringify(params))
     }
   }
@@ -351,26 +328,30 @@ const Home = () => {
       saveSelect({
         [`${currentType}`]: val
       })
-      if (currentType === rampType.buy) {
-        const currentTokens: any = tokenList
-        const token = currentTokens.find((item: token) => item.id === val)
-        initSelectList(token?.currency)
-        setselectedSellToken(val)
-      }
+      const currentTokens: any = tokenList
+      const token = currentTokens.find((item: token) => item.id === val)
+      initSelectList(token?.currency)
     }
+  }
+
+  const getSellTokenChange = (val: string | undefined) => {
+    setselectedSellToken(val)
+    setamount('')
+    seterrorMessage('')
+    saveSelect({
+      [`${currentType}`]: val
+    })
+    const currentTokens: any = tokenList
+    const token = currentTokens.find((item: token) => item.id === val)
+    initSelectList(token?.currency)
   }
 
   const setcurrentRampType = (val: rampType) => {
     initFiatList(val)
+    const localSelect = getLocalSelect()
+    const currency = val === rampType.buy ? localSelect.Buy : localSelect.sellFiatToken
+    initSelectList(currency?.split('-')[0])
     setcurrentType(val)
-    if(selectedSellToken && val === rampType.buy){
-      setselectedToken(selectedSellToken)
-    }else {
-      const localSelect = getLocalSelect()
-      const findItem = val === rampType.sell ? tokens.find((val: token) => val.network === "BTC" && val.crypto === 'BTC') || tokens[0] : fiats.find((val: fiat) => val.country === 'US') || fiats[0]
-      if (findItem) setselectedToken(localSelect[val] || findItem.id)
-      setselectedSellToken(selectedToken)
-    }
     setamount('')
     seterrorMessage('')
   }
@@ -388,16 +369,14 @@ const Home = () => {
 
   const getFiatTokenChange = (val: string | undefined) => {
     if (val) {
-      setselectedSellToken(val)
+      setselectedSellFiat(val)
       setamount('')
       seterrorMessage('')
       const currentTokens: any = fiats
       const token = currentTokens.find((item: token) => item.id === val)
       initSelectList(token?.currency)
-      setselectedSellToken(val)
       saveSelect({
-        sellFiatToken: val,
-        Buy: val
+        sellFiatToken: val
       })
     }
   }
@@ -421,39 +400,30 @@ const Home = () => {
         <div className="sell-title">
           <span className={currentType === rampType.buy ? 'active' : ''} onClick={() => setcurrentRampType(rampType.buy)}>Buy</span>
           <span className={currentType === rampType.sell ? 'active' : ''} onClick={() => setcurrentRampType(rampType.sell)}>Sell</span>
-          <div className="dot" style={{left: currentType === rampType.buy ? '5px': 'calc(50% - 5px)'}}></div>
+          <div className="dot" style={{ left: currentType === rampType.buy ? '5px' : 'calc(50% - 5px)' }}></div>
         </div>
         <div className="sell-container">
           <p className="token-to-buy-title">{currentType === rampType.buy ? 'Token to buy' : 'Fiat to receive'}</p>
-          {!selectedToken && <Skeleton animated className="custom-skeleton" />}
-          {selectedToken && <div>
-            <div className="toInput">
-              {currentType === rampType.buy ?
-                (
-                  selectedBuyToken ?
-                    <TokenInput
-                      className="buycrypto"
-                      type='buycrypto'
-                      onTokenChange={getBuyTokenChange}
-                      tokens={buyTokens}
-                      defaultTokenAddress={selectedBuyToken} />
-                    :
-                    <Skeleton animated className="custom-skeleton" />
-                ) : (
-                  selectedSellToken ?
-                    <TokenInput
-                      className="buycrypto"
-                      type='sellcrypto'
-                      onTokenChange={getFiatTokenChange}
-                      tokens={fiats as unknown as token[]}
-                      defaultTokenAddress={selectedSellToken} />
-                    :
-                    <Skeleton animated className="custom-skeleton" />
-                )
-              }
-            </div>
-            <TokenInput
-              type={currentType}
+          <div className="toInput">
+            {currentType === rampType.buy ?
+              (selectedBuyToken ? <TokenInput
+                className="buycrypto"
+                type='buycrypto'
+                onTokenChange={getBuyTokenChange}
+                tokens={buyTokens}
+                defaultTokenAddress={selectedBuyToken} /> : <Skeleton animated className="custom-skeleton" />)
+              :
+              (selectedSellFiat ? <TokenInput
+                className="buycrypto"
+                type='sellFiat'
+                onTokenChange={getFiatTokenChange}
+                tokens={fiats as unknown as token[]}
+                defaultTokenAddress={selectedSellFiat} /> : <Skeleton animated className="custom-skeleton" />)
+            }
+          </div>
+          {currentType === rampType.buy ?
+            (selectedToken ? <TokenInput
+              type={rampType.buy}
               onChange={getInputChange}
               value={amount}
               onTokenChange={getTokenChange}
@@ -461,9 +431,18 @@ const Home = () => {
               placeholder='0'
               defaultTokenAddress={selectedToken}
               pattern='^[0-9]*[.,]?[0-9]*$'
-              inputMode='decimal' />
-
-          </div>}
+              inputMode='decimal' /> : <Skeleton animated className="custom-skeleton" />)
+            :
+            (selectedSellToken ? <TokenInput
+              type={rampType.sell}
+              onChange={getInputChange}
+              value={amount}
+              onTokenChange={getSellTokenChange}
+              tokens={tokens}
+              placeholder='0'
+              defaultTokenAddress={selectedSellToken}
+              pattern='^[0-9]*[.,]?[0-9]*$'
+              inputMode='decimal' /> : <Skeleton animated className="custom-skeleton" />)}
           {errorMessage && <div className="erorr-message">{errorMessage}</div>}
           <Button block disabled={isDisabled} shape="rounded"
             onClick={createOrder} style={{
