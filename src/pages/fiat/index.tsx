@@ -220,19 +220,19 @@ const Home = () => {
       } else {
         let message = ''
         const token = buyTokens.find(token => token.id === selectedBuyToken)
-        const findFiat = fiats.find(val => val.id === currentTokenItem?.id)
+        // const findFiat = fiats.find(val => val.id === currentTokenItem?.id)
 
         let maxNumber = token?.maxPurchaseAmount
         let minNumber = token?.minPurchaseAmount
 
-        if (findFiat) {
-          const isMin = BigNumber(findFiat.payMin).comparedTo(token?.minPurchaseAmount || 0);
-          const isMax = BigNumber(findFiat.payMax).comparedTo(token?.maxPurchaseAmount || 0);
+        // if (findFiat) {
+        //   const isMin = BigNumber(findFiat.payMin).comparedTo(token?.minPurchaseAmount || 0);
+        //   const isMax = BigNumber(findFiat.payMax).comparedTo(token?.maxPurchaseAmount || 0);
 
-          console.log(token, findFiat, isMax, isMin)
-          if (isMin === 1) minNumber = BigNumber(findFiat.payMin || 0).plus((findFiat.payMin || 0) * 0.01).toNumber()
-          if (isMax === 1) maxNumber = token?.maxPurchaseAmount
-        }
+        //   console.log(token, findFiat, isMax, isMin)
+        //   if (isMin === 1) minNumber = BigNumber(findFiat.payMin || 0).plus((findFiat.payMin || 0) * 0.01).toNumber()
+        //   if (isMax === 1) maxNumber = token?.maxPurchaseAmount
+        // }
 
         const { isMin, isMax } = getMaxOrMin(value, maxNumber, minNumber)
 
@@ -344,7 +344,7 @@ const Home = () => {
     })
     const currentTokens: any = tokenList
     const token = currentTokens.find((item: token) => item.id === val)
-    initSelectList(token?.currency)
+    if(val === rampType.buy) initSelectList(token?.currency)
   }
 
   const setcurrentRampType = (val: rampType) => {
