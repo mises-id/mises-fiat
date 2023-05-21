@@ -255,7 +255,7 @@ const Home = () => {
 
   const getUrlParmas = (type: rampType = rampType.buy) => {
     const urlType = type.toLocaleLowerCase()
-    let params = `?appId=${process.env.REACT_APP_APPID!}&showtable=${urlType}&type=${urlType}`
+    let params = `?appId=${process.env.REACT_APP_APPID!}&showTable=${urlType}&type=${urlType}`
 
     if (type === rampType.sell) {
       const sellToken = buyTokens.find(val => val.id === selectedSellToken)
