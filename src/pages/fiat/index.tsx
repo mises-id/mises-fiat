@@ -161,9 +161,10 @@ const Home = () => {
   const Header = () => {
     return <div className="header">
       <div className="header-container flex justify-between items-center">
-        <div>
+        <div className="flex">
           <span className="company-name">Mises</span>
           <span className="feature-name">Ramp</span>
+          <span className="beta-tag">BETA</span>
         </div>
       </div>
     </div>
